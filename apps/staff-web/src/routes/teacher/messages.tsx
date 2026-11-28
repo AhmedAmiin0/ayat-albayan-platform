@@ -6,9 +6,7 @@ const UUID = /^[0-9a-f-]{36}$/i;
 
 export const Route = createFileRoute('/teacher/messages')({
   validateSearch: (search: Record<string, unknown>): { student?: string } =>
-    typeof search.student === 'string' && UUID.test(search.student)
-      ? { student: search.student }
-      : {},
+    typeof search.student === 'string' && UUID.test(search.student) ? { student: search.student } : {},
   component: TeacherMessagesRoute,
 });
 

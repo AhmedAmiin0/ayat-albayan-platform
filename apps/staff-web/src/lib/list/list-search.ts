@@ -9,7 +9,7 @@ export type FilterSearch = Record<string, string>;
 /** Filter params are namespaced so they never clash with `page`, `search` or a route's own keys. */
 export const filterParam = (key: string) => `f_${key}`;
 
-/** `sort`/`dir` from the URL: unknown keys drop; `dir` only with a sort and only when desc. */
+/** `sort`/`dir` from the URL: unknown keys dropped, `dir` only with a sort and only when desc. */
 export function parseSortSearch(
   search: Record<string, unknown>,
   keys: readonly string[],

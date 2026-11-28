@@ -60,7 +60,7 @@ export function ReviewStep({
   const duplicates = duplicateCandidates(book.error);
   // A missing, wrong or expired invoice is fixed on the invoice step, not here.
   const backToInvoice = INVOICE_ERRORS.has(errorCode(book.error) ?? '');
-  // The first lesson passed while the review was open (or in a resumed draft): back to the slot step.
+  // The first lesson passed while the review was open (or in a resumed draft): back to the slots.
   const past = errorCode(book.error) === 'date_in_past';
 
   return (

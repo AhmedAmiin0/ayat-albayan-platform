@@ -41,13 +41,9 @@ describe('FeedbackPublicPage (no login)', () => {
     expect(await screen.findByText(t.feedback.invalid)).toBeTruthy();
     expect(screen.queryByText(t.feedback.expired)).toBeNull();
     expect(screen.queryByRole('button', { name: t.feedback.submit })).toBeNull();
-    // One feedback read (no retry); the page also reads GET /settings/public for the WhatsApp number.
-    expect(
-      fetchMock.mock.calls.filter(([url]) => String(url).includes('/public/feedback/')),
-    ).toHaveLength(1);
-    expect(
-      screen.getByRole('link', { name: t.feedback.openWhatsapp }).getAttribute('href'),
-    ).toMatch(/^https:\/\/wa\.me\/\d+$/);
+    // One feedback read (no retry); the page also reads GET /settings/public for the WhatsApp no.
+    expect(fetchMock.mock.calls.filter(([url]) => String(url).includes('/public/feedback/'))).toHaveLength(1);
+    expect(screen.getByRole('link', { name: t.feedback.openWhatsapp }).getAttribute('href')).toMatch(/^https:\/\/wa\.me\/\d+$/);
   });
 
   it('an expired link (410) says expired, and also offers the WhatsApp way to a new one', async () => {

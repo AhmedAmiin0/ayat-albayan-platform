@@ -14,7 +14,10 @@ export interface ForwardListProps {
   onToggle: (thread: ThreadView) => void;
 }
 
-/** One chat: its whole 44px row toggles the checkbox; where a text cannot go a hint (the server decides). */
+/**
+ * One chat: its whole 44px row toggles the checkbox; where a text cannot go a hint (the server
+ * decides).
+ */
 function Row({
   thread: th,
   checked,

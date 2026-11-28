@@ -4,7 +4,10 @@ import { Marked } from '@/features/messaging/inbox/saved-replies/panel/Marked';
 import { RowActions } from './MineActions';
 
 export interface ReplyOptionsProps {
-  /** The listbox id (the composer or the search box points aria-controls / aria-activedescendant at it). */
+  /**
+   * The listbox id (the composer or the search box points aria-controls / aria-activedescendant at
+   * it).
+   */
   id: string;
   replies: readonly SavedReply[];
   /** What was typed after «/» (or in the search): its letters are bold. */
@@ -22,8 +25,8 @@ export interface ReplyOptionsProps {
 export const optionId = (listId: string, index: number) => `${listId}-opt-${index}`;
 
 /**
- * The replies as a listbox, each row as WhatsApp Business draws it: «/title» bold
- * in the accent (isolated, so the slash leads in Arabic and English), the text in the secondary ink on
+ * The replies as a listbox, each row as WhatsApp Business draws it: «/title» bold in the accent
+ * (isolated, so the slash leads in Arabic and English), the text in the secondary ink on
  * at most two lines, a paperclip when a file goes with it, a hairline between rows; about five rows
  * show, the rest scroll. A mouse click or Enter fills the composer; focus stays in the box.
  */

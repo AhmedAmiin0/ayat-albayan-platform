@@ -2,7 +2,7 @@ import { MicError } from '@ab/client-core';
 import type { CallIceServer } from '@ab/shared';
 
 // The browser side of a WhatsApp call (docs/28 §2): this device IS the WebRTC peer, its audio flows
-// directly to Meta; only the SDP goes through our API. Injected so tests run with fakes (no network).
+// directly to Meta; only the SDP goes through our API. Injected so tests run with fakes.
 
 export interface RtcDeps {
   createPeer: (config: RTCConfiguration) => RTCPeerConnection;

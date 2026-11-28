@@ -21,7 +21,7 @@ export type StepKey = 'students' | 'missed' | 'teacher' | 'package' | 'slot' | '
 export { stepReady, stepsFor, stepsOf } from './draft.steps';
 export { days, draftPicks, pickPatch, withPicks } from './draft.days';
 
-export type PickedStudent = { id: string; name: string; code: string | null };
+export interface PickedStudent { id: string; name: string; code: string | null }
 
 export interface BookingDraft {
   /** Trial, package or makeup (R-SCH-10). */
@@ -51,7 +51,7 @@ export interface BookingDraft {
   extra: string[];
   /** The one lesson lies outside the teacher hours (sent as outsideHours). */
   outsideHours?: boolean;
-  /** The assistant books a subscription's course: its fixed day count and lesson count; else null. */
+  /** The assistant books a subscription's course: its fixed day and lesson counts; else null. */
   course: CourseDraft | null;
   /** A new trial date for an existing student; absent means any other booking. */
   trialDate?: TrialDateDraft | null;
@@ -116,7 +116,7 @@ const packageField = (d: Pick<BookingDraft, 'pkg' | 'course'>): { package: Packa
 export function toBookingRequest(d: BookingDraft, override?: string): BookingRequest | null {
   if (!d.teacher || !d.startsAt) return null;
   if (d.kind === 'makeup' && !d.missed) return null;
-  // A trial or a makeup is exactly one lesson: one pick, on the first slot's day (docs/10 invariant 4).
+  // A trial or a makeup is one lesson: one pick, on the first slot's day (docs/10 invariant 4).
   const rule = pickedRule(d);
   if (!rule) return null;
   const base = {

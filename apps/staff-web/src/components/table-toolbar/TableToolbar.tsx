@@ -37,7 +37,8 @@ function CountBadge({ count }: { count: number }) {
 // Applied: mint wash, green edge and green glyph, so a filtered table reads at a glance.
 const APPLIED = 'border-lapis bg-accent text-ink enabled:hover:bg-accent [&_svg]:text-lapis';
 
-export function TableToolbar({ search, fields, chips, onClearAll, resultCount, end, compact = false }: TableToolbarProps) {
+export function TableToolbar(props: TableToolbarProps) {
+  const { search, fields, chips, onClearAll, resultCount, end, compact = false } = props;
   const [open, setOpen] = useState(false);
   // Focus target when a chip or clear all removes the chip row (WCAG 2.4.3).
   const filterButton = useRef<HTMLButtonElement>(null);
@@ -48,6 +49,7 @@ export function TableToolbar({ search, fields, chips, onClearAll, resultCount, e
     setRound((n) => n + 1);
   };
   const count = chips.length;
+  const focusFilter = () => filterButton.current?.focus();
   if (!search && !fields && !end) return null;
 
   return (
@@ -72,9 +74,14 @@ export function TableToolbar({ search, fields, chips, onClearAll, resultCount, e
         {end && <div className="ms-auto flex gap-2.5">{end}</div>}
       </div>
       {fields && <FilterSummary count={count} resultCount={resultCount} />}
-      <ActiveFilterChips chips={chips} onClearAll={clear} onEmpty={() => filterButton.current?.focus()} />
+      <ActiveFilterChips chips={chips} onClearAll={clear} onEmpty={focusFilter} />
       {open && fields && (
-        <FilterPanel onClose={() => setOpen(false)} onClearAll={count > 0 ? clear : undefined} count={count} resultCount={resultCount}>
+        <FilterPanel
+          onClose={() => setOpen(false)}
+          onClearAll={count > 0 ? clear : undefined}
+          count={count}
+          resultCount={resultCount}
+        >
           <div key={round} className="contents">
             {fields}
           </div>

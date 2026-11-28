@@ -18,7 +18,8 @@ describe('«عدّل الوقت» next to «غيّر الموعد» (R-SCH-11)',
     );
     expect(screen.getByText(t.lessons.timeEdit.captionEdit)).toBeTruthy();
     expect(screen.getByText(t.lessons.timeEdit.captionReschedule)).toBeTruthy();
-    expect(t.lessons.event.reschedule).toBe(t.lessons.rescheduleSubmit); // one label, so the hint quotes the real button
+    // One label, so the hint quotes the real button.
+    expect(t.lessons.event.reschedule).toBe(t.lessons.rescheduleSubmit);
     expect(t.lessons.timeEdit.vsReschedule).toContain(`«${t.lessons.event.reschedule}»`);
   });
 

@@ -5,10 +5,10 @@ import { t } from '@ab/web-kit';
 import { SUMMARY, WORK } from '@/features/reporting/dashboard/dashboard-fixture';
 import { DashboardPage } from '@/features/reporting/dashboard/DashboardPage/DashboardPage';
 
-// Overflow guard for the dashboard. jsdom has no layout, so this
-// pins the class contract that fixes it: a single-column grid is `grid-cols-1` (minmax(0, 1fr)), never
-// the implicit `auto` track that grows to a wide table's min-content; wide tables scroll in their own
-// box; row headers wrap instead of forcing the table wider. Measured for real by the responsive e2e.
+// Overflow guard for the dashboard. jsdom has no layout, so this pins the class contract that
+// fixes it: a single-column grid is `grid-cols-1` (minmax(0, 1fr)), never the implicit `auto`
+// track that grows to a wide table's min-content; wide tables scroll in their own box; row
+// headers wrap instead of forcing the table wider. Measured for real by the responsive e2e.
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (importOriginal) => ({
@@ -78,7 +78,7 @@ describe('dashboard layout never grows past the page', () => {
     for (const name of names) {
       const box = screen.getByRole('table', { name }).closest('.ab-scroll-x');
       expect(box, name).not.toBeNull();
-      // Reachable by keyboard and named (axe scrollable-region-focusable): Tab lands on it, arrows scroll it.
+      // Keyboard-reachable and named (axe scrollable-region-focusable): Tab lands, arrows scroll.
       expect(box?.getAttribute('tabindex'), name).toBe('0');
       expect(box?.getAttribute('role'), name).toBe('region');
       expect(box?.getAttribute('aria-label'), name).toBe(name);

@@ -16,7 +16,7 @@ export const Label = ({ text }: { text: string }) => (
   <span className="text-ink-3 sm:hidden">{text}: </span>
 );
 
-/** The Arabic name over the Meta name; a template imported from Meta shows its Meta name once, as an LTR island. */
+/** The Arabic name over the Meta name; one imported from Meta shows that name once (LTR island). */
 export function NameCell({ name, tpl }: { name: string; tpl: TemplateView }) {
   if (name === tpl.meta_name) return <Ltr className="font-semibold text-ink">{name}</Ltr>;
   return (

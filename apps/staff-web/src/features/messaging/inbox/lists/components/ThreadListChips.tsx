@@ -12,9 +12,10 @@ export interface ThreadListChipsProps {
 }
 
 /**
- * The open chat's lists as small quiet chips in the header's chip line (docs/22 §4). A chip shows that
- * list in the chip row, with this chat still open. Nothing when the chat is in no list. The focus ring
- * sits inside the chip (the header's chip line scrolls and would clip it); 44px on phones.
+ * The open chat's lists as small quiet chips in the header's chip line (docs/22 §4). A chip shows
+ * that list in the chip row, with this chat still open. Nothing when the chat is in no list. The
+ * focus ring sits inside the chip (the header's chip line scrolls and would clip it); 44px on
+ * phones.
  */
 export function ThreadListChips({ phone, lists, listSearch }: ThreadListChipsProps) {
   const mode = useInboxMode();

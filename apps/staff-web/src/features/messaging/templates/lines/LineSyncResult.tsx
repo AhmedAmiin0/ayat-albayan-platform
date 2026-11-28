@@ -3,7 +3,7 @@ import { Ltr, t } from '@ab/web-kit';
 import { syncFailedText } from '@/features/messaging/templates/api';
 import { skipReasonText } from '@/features/messaging/templates/skip-reasons';
 
-/** Imported keys and skipped names are Meta's own (English) words: LTR islands that may wrap; the reasons are ours. */
+/** Imported keys and skipped names are Meta's (English) words: LTR islands that may wrap. */
 const WRAP = 'whitespace-normal break-all';
 
 /**

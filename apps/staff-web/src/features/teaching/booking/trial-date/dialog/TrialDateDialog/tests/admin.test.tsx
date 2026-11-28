@@ -57,7 +57,7 @@ describe('TrialDateDialog, admin (owner 2026-10-25, R-SCH-06)', () => {
     expect(await screen.findByText(t.trialDate.doneMoved)).toBeTruthy();
     const [body] = sentTo(apiSend, '/booking/trial-date');
     expect(body).toMatchObject({ studentIds: [STUDENT_ID], kind: 'trial', package: 'trial', teacherId: ABRAR.id, byday: [0], startTimeLocal: '17:00', startsAt: SLOT });
-    expect(typeof body?.['clientRequestId']).toBe('string');
+    expect(typeof body?.clientRequestId).toBe('string');
     expect(screen.getByText(t.trialDate.doneNote)).toBeTruthy();
     fireEvent.click(within(screen.getByTestId('trial-date-done')).getByRole('button', { name: t.trialDate.close }));
     expect(onClose).toHaveBeenCalled();
@@ -70,7 +70,7 @@ describe('TrialDateDialog, admin (owner 2026-10-25, R-SCH-06)', () => {
     fireEvent.click(screen.getByRole('button', { name: t.booking.override }));
     await screen.findByText(t.trialDate.doneMoved);
     const [first, second] = sentTo(apiSend, '/booking/trial-date');
-    expect(second).toMatchObject({ override: { reason: 'ولي الأمر موافق' }, clientRequestId: first?.['clientRequestId'] });
+    expect(second).toMatchObject({ override: { reason: 'ولي الأمر موافق' }, clientRequestId: first?.clientRequestId });
   });
 
   it('warns from the 3rd date on, without blocking', async () => {

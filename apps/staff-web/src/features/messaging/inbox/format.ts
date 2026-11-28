@@ -45,7 +45,10 @@ export function threadName(th: Pick<ThreadView, 'display_name' | 'phone_e164'>):
   return th.display_name ?? formatPhone(th.phone_e164);
 }
 
-/** What the thread is called in this mode: a teacher never sees the number, so an unnamed one says who it is. */
+/**
+ * What the thread is called in this mode: a teacher never sees the number, so an unnamed one
+ * says who it is.
+ */
 export function threadTitle(th: ThreadView, mode: InboxMode): string {
   if (showsPhone(mode)) return threadName(th);
   const kind = threadKind(th);

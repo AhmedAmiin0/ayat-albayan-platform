@@ -3,13 +3,13 @@ import { queryOptions, skipToken } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@ab/web-kit';
 import { messagingKeys } from '@/features/messaging/keys';
 
-/** GET /messages/gate: the effective send gate (env, WhatsApp config, kill switch) and the queue. */
+/** GET /messages/gate: the effective send gate (env, WhatsApp config, kill switch), the queue. */
 export const sendGateQuery = queryOptions({
   queryKey: messagingKeys.sendGate(),
   queryFn: () => apiFetch<SendGateView>('/messages/gate'),
 });
 
-/** POST /messaging/lines/check (admin): both WhatsApp lines as Meta reports them now; never prefetched. */
+/** POST /messaging/lines/check (admin): both WhatsApp lines as Meta sees them; not prefetched. */
 export const checkLines = () => apiSend<LineCheckView[]>('POST', '/messaging/lines/check');
 
 /**

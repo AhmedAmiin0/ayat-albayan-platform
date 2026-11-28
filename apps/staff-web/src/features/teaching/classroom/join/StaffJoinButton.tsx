@@ -23,7 +23,7 @@ export function StaffJoinButton({ lesson, size = 'md', variant }: Props) {
   const shown = openedAt ? { ...lesson, room_opened_at: openedAt } : lesson;
   const open = useMutation({
     mutationFn: openRoom,
-    // The server's instant may be a moment after this page's minute clock: open from whichever is first.
+    // The server's instant may lag this page's minute clock: open from whichever comes first.
     onSuccess: (r) => {
       setOpenedAt(new Date(Math.min(Date.parse(r.room_opened_at), now.getTime())).toISOString());
       void client.invalidateQueries({ queryKey: LESSONS_KEY });

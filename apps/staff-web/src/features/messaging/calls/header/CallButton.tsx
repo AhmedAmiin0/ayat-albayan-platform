@@ -11,9 +11,9 @@ export interface CallButtonProps {
 }
 
 /**
- * The phone icon of the thread header, like WhatsApp's (docs/28 §5). Shown only while calls are on and
- * the user may call from this chat; dimmed while the chat line is not on Kapso, its reason tied to the
- * button (aria-describedby) as well as in the tooltip.
+ * The phone icon of the thread header, like WhatsApp's (docs/28 §5). Shown only while calls are on
+ * and the user may call from this chat; dimmed while the chat line is not on Kapso, its reason tied
+ * to the button (aria-describedby) as well as in the tooltip.
  */
 export function CallButton({ phone, name, canSend }: CallButtonProps) {
   const ui = useCalls();

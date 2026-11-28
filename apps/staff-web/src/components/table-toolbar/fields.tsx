@@ -55,7 +55,7 @@ export interface CheckboxFilterFieldProps {
   onChange: (checked: boolean) => void;
 }
 
-/** A yes / no page filter: a bordered row, 44px on phones, whose whole label toggles it. */
+/** Yes/no page filter in the panel: a bordered row, 44px on phones; the whole label toggles it. */
 export function CheckboxFilterField({ label, checked, onChange }: CheckboxFilterFieldProps) {
   return (
     <label className="flex min-h-11 cursor-pointer items-center gap-2.5 rounded-md border border-rule px-3 text-sm hover:bg-sunk sm:min-h-10">

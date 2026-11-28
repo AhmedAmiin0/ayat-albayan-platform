@@ -110,7 +110,7 @@ export function conflictsOf(error: unknown): Conflict[] | null {
   return Array.isArray(body.conflicts) ? (body.conflicts as Conflict[]) : [];
 }
 
-// Every lesson/booking domain code (lessons.error.*, booking.error.*), with the drawer's own wording on top.
+// Every lesson/booking domain code (lessons.error.*, booking.error.*), drawer wording on top.
 const ERROR_TEXT: Record<string, string> = {
   ...t.booking.error,
   ...t.lessons.error,
@@ -120,7 +120,7 @@ const ERROR_TEXT: Record<string, string> = {
   not_started: t.lessons.notStarted,
 };
 
-/** Arabic line for a failed lesson or booking command (docs/10 §3 codes), else the generic error. */
+/** The line for a failed lesson or booking command (docs/10 §3 codes), else the generic error. */
 export function lessonErrorText(error: unknown): string {
   return ERROR_TEXT[errorCode(error) ?? ''] ?? t.common.error;
 }

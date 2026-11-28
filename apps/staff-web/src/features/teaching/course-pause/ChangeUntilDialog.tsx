@@ -49,10 +49,16 @@ export function ChangeUntilDialog({ studentId, pause, onClose, onDone }: ChangeU
       }
     >
       <form id={formId} className="grid gap-4" onSubmit={submit} noValidate>
-        <Field label={t.coursePause.until} hint={t.coursePause.untilHint} error={wrong ? t.coursePause.errors.invalid_range : undefined}>
+        <Field
+          label={t.coursePause.until}
+          hint={t.coursePause.untilHint}
+          error={wrong ? t.coursePause.errors.invalid_range : undefined}
+        >
           {(p) => <Input {...p} type="date" dir="ltr" min={min} value={until} onChange={(e) => setUntil(e.target.value)} />}
         </Field>
-        {save.isError && <FormAlert>{t.coursePause.errors[coursePauseErrorCode(save.error)]}</FormAlert>}
+        {save.isError && (
+          <FormAlert>{t.coursePause.errors[coursePauseErrorCode(save.error)]}</FormAlert>
+        )}
       </form>
     </Dialog>
   );

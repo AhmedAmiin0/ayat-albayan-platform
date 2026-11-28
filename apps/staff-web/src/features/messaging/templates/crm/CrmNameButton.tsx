@@ -2,7 +2,7 @@ import { crmTemplateName, type TemplateView } from '@ab/shared';
 import { Button, Ltr, t } from '@ab/web-kit';
 import { templateName } from '@/features/messaging/templates/template-cells';
 
-/** A crm or meta line's row (docs/19): the WABA name it goes as (crm_name, else the default) and its edit button. */
+/** A crm or meta line's row (docs/19): its WABA name (crm_name, else default) and edit button. */
 export function CrmNameButton({
   tpl,
   onEdit,

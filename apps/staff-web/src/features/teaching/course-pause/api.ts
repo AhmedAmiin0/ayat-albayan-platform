@@ -42,9 +42,9 @@ export const resumeCoursePause = (studentId: string, subscriptionId?: string) =>
   pauses.resume(studentId, subscriptionId);
 
 /**
- * After any write: the pause state, the student (file and lists: the status chip) and the money (the
- * package's status and dates). Literal roots (['students'] = STUDENTS_KEY, ['money'] = MONEY_KEY) keep this
- * feature free of an import cycle with the two features that render it.
+ * After any write: the pause state, the student (file and lists: the status chip) and the money
+ * (the package's status and dates). Literal roots (['students'] = STUDENTS_KEY, ['money'] =
+ * MONEY_KEY) keep this feature free of an import cycle with the two features that render it.
  */
 export function useInvalidatePause(studentId: string): () => Promise<void> {
   const client = useQueryClient();

@@ -86,8 +86,8 @@ export function MessageBubble(props: MessageBubbleProps) {
           'min-w-0 max-w-[min(85%,560px)] rounded-lg px-3.5 py-2.5 text-sm',
           // WhatsApp's buttons span the bubble: a template with buttons is never a sliver.
           rows && 'min-w-[min(85%,260px)] overflow-hidden pb-0',
-          // Below 900px (the full-screen chat on a sunk ground): ours mint, theirs white, each with its
-          // sharp tail corner at the top of its screen edge.
+          // Below 900px (the full-screen chat on a sunk ground): ours mint, theirs white, each
+          // with its sharp tail corner at the top of its screen edge.
           outbound
             ? 'bg-sunk max-shell:rounded-tr-sm max-shell:border max-shell:border-lapis/25 max-shell:bg-lapis-wash'
             : 'border border-rule bg-raised max-shell:rounded-tl-sm',

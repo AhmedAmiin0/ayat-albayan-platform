@@ -15,11 +15,9 @@ import { onOffWord, RuleSwitchInput } from './RuleSwitchInput';
 const r = t.notificationRules;
 type Asking = 'family-on' | 'family-off' | 'essential-off' | null;
 
-/** What a switch press asks first: family ON says whom it reaches; essential OFF is typed; family OFF a plain dialog. */
-export function askFor(
-  entry: Pick<NotificationEntryView, 'audience' | 'essential'>,
-  on: boolean,
-): Asking {
+/** A switch press asks first: family ON says whom it reaches; essential OFF is typed; family OFF
+ * is a plain dialog. */
+export function askFor(entry: Pick<NotificationEntryView, 'audience' | 'essential'>, on: boolean): Asking {
   if (!on && entry.essential) return 'essential-off';
   if (!isFamilyFacing(entry)) return null;
   return on ? 'family-on' : 'family-off';

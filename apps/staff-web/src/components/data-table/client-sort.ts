@@ -8,7 +8,7 @@ const collator = new Intl.Collator('ar', { numeric: true, sensitivity: 'base' })
 const isEmpty = (v: unknown): v is null | undefined | '' =>
   v === null || v === undefined || v === '';
 
-/** Ascending compare: numbers, dates by time, the rest as Arabic text; empty values last. */
+/** Ascending compare: numbers numerically, dates by time, the rest as Arabic text; empties last. */
 export function compareValues(a: unknown, b: unknown): number {
   if (isEmpty(a) || isEmpty(b)) return Number(isEmpty(a)) - Number(isEmpty(b));
   if (typeof a === 'number' && typeof b === 'number') return a - b;
@@ -19,7 +19,7 @@ export function compareValues(a: unknown, b: unknown): number {
 
 export type FilterKind = 'text' | 'select';
 
-/** Text filters match a substring, ignoring case, tashkeel and hamza forms; select is exact. */
+/** Does a cell pass a filter? text: contains, ignoring case/tashkeel/hamza forms; select: exact. */
 export function matchesFilter(value: unknown, query: string, kind: FilterKind = 'text'): boolean {
   if (query === '') return true;
   const text = isEmpty(value) ? '' : String(value);

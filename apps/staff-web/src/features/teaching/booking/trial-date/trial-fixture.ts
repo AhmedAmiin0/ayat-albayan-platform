@@ -47,7 +47,7 @@ export function routeTrialFetch(apiFetch: Mock, o: { base: string; history: Tria
   });
 }
 
-/** apiSend: the check answers «no clash»; each POST {base}/trial-date takes the next answer (an Error rejects). */
+/** apiSend: the check says «no clash»; each POST {base}/trial-date takes the next answer. */
 export function routeTrialSend(apiSend: Mock, o: { base: string; answers: unknown[] }): void {
   apiSend.mockImplementation((_method: string, path: string) => {
     if (path === `${o.base}/trial-date/check`) return Promise.resolve({ conflicts: [] });

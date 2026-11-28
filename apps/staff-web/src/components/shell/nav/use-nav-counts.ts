@@ -6,7 +6,7 @@ import { studentCalls, teacherCalls } from '@ab/client-core';
 import { apiFetch, apiSend, t } from '@ab/web-kit';
 import { navCountKey } from './nav-count.keys';
 
-type Total = { total: number };
+interface Total { total: number }
 
 const ONE_ROW = { page: '1', pageSize: '1' };
 const studentApi = studentCalls({ apiFetch, apiSend });

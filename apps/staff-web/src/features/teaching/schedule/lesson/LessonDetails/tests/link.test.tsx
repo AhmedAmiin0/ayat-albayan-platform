@@ -7,8 +7,8 @@ import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { LessonDetails } from '@/features/teaching/schedule/lesson/LessonDetails/LessonDetails';
 
 /**
- * The drawer's lesson details: `platform` is lesson.platform_classroom (its teacher's mode); `auto` is
- * settings.meeting_link_auto as GET /settings/public answered it, which the row ignores.
+ * The drawer's lesson details: `platform` is lesson.platform_classroom (its teacher's mode);
+ * `auto` is settings.meeting_link_auto as GET /settings/public answered it, which the row ignores.
  */
 function details(platform: boolean | undefined, auto = false) {
   const client = new QueryClient();

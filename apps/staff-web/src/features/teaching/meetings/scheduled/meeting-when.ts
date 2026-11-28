@@ -25,7 +25,7 @@ export function opensLine(
   return L.opensAt.replace('{when}', whenText(m.window.opens_at, tz, clock));
 }
 
-/** The guest page's intro for a scheduled meeting not open yet: when it starts and when the room opens. */
+/** The guest intro for a scheduled meeting not open yet: when it starts and the room opens. */
 export function guestScheduleText(
   v: { starts_at: string | null; opens_at: string | null },
   ctx: { now: Date; tz: string },

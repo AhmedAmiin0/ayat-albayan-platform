@@ -10,7 +10,7 @@ type TakenInput = Pick<BookingDraft, 'course' | 'tz' | 'startsAt' | 'extra' | 'k
 
 const weekday: Record<string, string> = t.enums.weekday;
 
-/** The weekdays (family zone) of the still-prefilled picks that a clash falls on, Saturday first. */
+/** The weekdays (family zone) of the still-prefilled picks a clash falls on, Saturday first. */
 export function takenDays(d: TakenInput, conflicts: readonly Conflict[]): number[] {
   const prefilled = d.course?.prefilled ?? [];
   if (prefilled.length === 0) return [];

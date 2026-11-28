@@ -33,11 +33,11 @@ export interface ThreadPaneProps {
 }
 
 /**
- * One conversation (R-LEAD-02, R-MSG-05, R-SUB-01): the log, the reply box and beside it (below it under
- * 1280px) the lead's panel or the family's packages; sales gets its chat actions and children line in the
- * header instead. Teacher mode: the log and the reply box only; their own chat with the academy is
- * read-only. Below 900px: a full-screen chat; the panel is a full-screen sheet opened from the header. The
- * sales actions' dialogs sit above that switch (SalesChatFrame), so crossing 900px keeps them.
+ * One conversation (R-LEAD-02, R-MSG-05, R-SUB-01): the log, the reply box and beside it (below it
+ * under 1280px) the lead's panel or the family's packages; sales gets its chat actions and children
+ * line in the header. Teacher mode: log and reply box only; their own chat with the academy is
+ * read-only. Below 900px: a full-screen chat, the panel a full-screen sheet opened from the header.
+ * The sales actions' dialogs sit above that switch (SalesChatFrame), so crossing 900px keeps them.
  */
 export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const queryClient = useQueryClient();
@@ -70,13 +70,16 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   }, [loaded, phone, queryClient]);
 
   if (detail.isPending) return <p className="text-sm text-ink-3">{t.common.loading}</p>;
-  // A failed background poll (data kept) does not blank the chat: the log shows a status line instead.
+  // A failed background poll (data kept) does not blank the chat; the log shows a status line.
   if (detail.isError && !detail.data) return <FormAlert>{readErrorText(detail.error)}</FormAlert>;
   const first = detail.data.pages[0];
-  if (!th) return <NewThread phone={phone} lessons={first?.lessons ?? []} />;
+  const lessons = first?.lessons ?? [];
+  if (!th) return <NewThread phone={phone} lessons={lessons} />;
   const waiting = new Set((templates.data ?? []).filter((x) => x.status !== 'approved').map((x) => x.key));
-  const context = { studentName: lead.data?.qualification.student_name ?? null, firstStudentName: first?.people.students[0]?.name ?? null, teacherName: th.teacher_name, lessons: first?.lessons ?? [] };
-  // Sales keeps the children for its header line; their packages arrive nulled, so no badge (admin only).
+  const studentName = lead.data?.qualification.student_name ?? null;
+  const firstStudentName = first?.people.students[0]?.name ?? null;
+  const context = { studentName, firstStudentName, teacherName: th.teacher_name, lessons };
+  // Sales keeps the children for its header line; their packages arrive nulled, so no badge.
   const people = teacherMode ? null : (first?.people ?? null);
   const family = admin && people?.guardian ? people : null;
   const panel = isLead || !!family;
@@ -89,10 +92,10 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   );
   const sheetLabel = isLead ? t.inbox.leadSheet : t.inbox.subscriptionSheet;
   const sheetOpen = sheet && panel && phoneView;
-  const toast = notice && <Toast {...notice} onDismiss={() => setNotice(null)} />; // inside an open phone sheet
+  const toast = notice && <Toast {...notice} onDismiss={() => setNotice(null)} />;
   // Until /teachers/me answers, a teacher's number counts as their own (no composer).
   const ownThread = teacherMode && !!th.teacher_id && (!me.data || me.data.id === th.teacher_id);
-  const line = mode === 'sales' && people && <SalesFamilyLine phone={phone} people={people} lessons={first?.lessons ?? []} />;
+  const line = mode === 'sales' && people && <SalesFamilyLine phone={phone} people={people} lessons={lessons} />;
   const readOnly = ownThread ? t.inbox.ownThreadReadOnly : access.send ? null : t.inbox.sendNotAllowed;
   const headerProps = { thread: th, listSearch, headingId, badge: admin && people ? threadBadge(people) : null, line, lists: first?.lists, callable: !readOnly };
   const log = (fill: 'shell' | 'beside' | 'phone') => (

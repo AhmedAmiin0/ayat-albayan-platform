@@ -4,7 +4,7 @@ import { createContext, useContext } from 'react';
 // threads to the teacher's families and strips the lead / money fields; the UI hides the admin's
 // panels and actions. Admin is the default, so /admin/inbox needs no provider.
 
-// Sales mode: scoped by the API like the teacher's, but shown like the admin's (the salesperson sees phones).
+// Sales mode: scoped by the API like teacher mode, shown like admin mode (sales sees phones).
 export type InboxMode = 'admin' | 'teacher' | 'sales';
 
 export const InboxModeContext = createContext<InboxMode>('admin');

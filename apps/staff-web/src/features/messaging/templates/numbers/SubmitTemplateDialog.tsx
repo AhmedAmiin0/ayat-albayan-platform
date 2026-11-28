@@ -7,7 +7,7 @@ const PARAM_NAMES: Record<string, string | undefined> = t.inbox.composer.paramNa
 
 export interface SubmitTemplateDialogProps {
   template: TemplateView;
-  /** The number the row goes to Meta from: its formatted phone (lines check) and the server's facts. */
+  /** The number the row goes to Meta from: its formatted phone (lines check) and server facts. */
   phone: string | undefined;
   facts: TemplateLineView | undefined;
   busy: boolean;
@@ -17,7 +17,8 @@ export interface SubmitTemplateDialogProps {
 
 /**
  * The explicit confirm before a template goes to Meta for review (T3): the admin sees the exact
- * text, footer, variables and buttons that will be submitted, and the number (WABA) it goes to. Never automatic.
+ * text, footer, variables and buttons that will be submitted, and the number (WABA) it goes to.
+ * Never automatic.
  */
 export function SubmitTemplateDialog({
   template: tpl,

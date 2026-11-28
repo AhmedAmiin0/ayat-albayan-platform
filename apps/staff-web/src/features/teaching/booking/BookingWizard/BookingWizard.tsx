@@ -36,11 +36,11 @@ export interface BookingWizardProps {
   exit?: { label: string; onExit: () => void } | undefined;
   /** The step to open on (a kept sales draft, docs/20 W9); absent = the first step. */
   initialStep?: StepKey | undefined;
-  /** Every draft / step change, and `booked` once the booking is made (the sales chat keeps the draft). */
+  /** Every draft / step change, and `booked` once booked (the sales chat keeps the draft). */
   onProgress?: ((p: { draft: BookingDraft; step: StepKey; booked: boolean }) => void) | undefined;
 }
 
-type BackProps = { first: boolean; exit: BookingWizardProps['exit']; onBack: () => void };
+interface BackProps { first: boolean; exit: BookingWizardProps['exit']; onBack: () => void }
 
 /** On the first step the caller's exit, else disabled. */
 function BackButton({ first, exit, onBack }: BackProps) {
@@ -88,7 +88,7 @@ export function BookingWizard(props: BookingWizardProps) {
   const steps = stepsOf(draft);
   const index = steps.indexOf(step);
   const go = (to: number) => setStep(steps[to] ?? step);
-  // The assistant's course leaves the slot step only over a clean series check (no clash, no error).
+  // The assistant's course leaves the slot step only on a clean series check (no clash, no error).
   const clean = useCourseClean(draft);
   const ready = stepReady(draft, step) && (step !== 'slot' || !draft.course || clean);
 

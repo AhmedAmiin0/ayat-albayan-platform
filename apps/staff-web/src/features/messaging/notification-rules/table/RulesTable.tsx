@@ -10,7 +10,14 @@ import { fillText } from '@/features/messaging/notification-rules/rule-text';
 
 const r = t.notificationRules;
 const TABS_ID = 'rules-audience';
-const DESKTOP = [r.columns.name, r.columns.channels, r.columns.number, r.columns.state, r.columns.switch];
+const GUARDIAN = t.notificationCatalogue.audience.guardian;
+const DESKTOP = [
+  r.columns.name,
+  r.columns.channels,
+  r.columns.number,
+  r.columns.state,
+  r.columns.switch,
+];
 const PHONE = [r.columns.name, r.columns.switch];
 const head = 'border-b border-rule-strong px-2 py-1.5 text-start text-xs font-semibold text-ink-3';
 
@@ -26,14 +33,17 @@ export function RulesTable({ entries, lines, tab, onTab }: RulesTableProps) {
   const phone = usePhone();
   const [open, setOpen] = useState<string | null>(null);
   const tabs = audienceTabs(entries);
-  const label = tabs.find((x) => x.value === tab)?.label ?? t.notificationCatalogue.audience.guardian;
+  const label = tabs.find((x) => x.value === tab)?.label ?? GUARDIAN;
   const rows = rowsOf(entries, tab);
   const ids = tabIds(TABS_ID, tab);
   const caption = fillText(r.caption, { audience: label });
   const opened = entries.find((e) => e.key === open);
   return (
     <div className="grid min-w-0 gap-2">
-      <Tabs label={t.settingsPages.audiences} tabs={tabs} value={tab} onChange={onTab} idPrefix={TABS_ID} />
+      <Tabs
+        label={t.settingsPages.audiences} tabs={tabs} value={tab}
+        onChange={onTab} idPrefix={TABS_ID}
+      />
       <div role="tabpanel" id={ids.panel} aria-labelledby={ids.tab} className="min-w-0">
         {rows.length === 0 ? (
           <p className="py-3 text-sm text-ink-3">{t.settingsPages.audienceEmpty}</p>
@@ -54,7 +64,9 @@ export function RulesTable({ entries, lines, tab, onTab }: RulesTableProps) {
               </thead>
               <tbody>
                 {rows.map((entry) =>
-                  phone ? <RulePhoneRow key={entry.key} entry={entry} onOpen={setOpen} /> : <RuleRow key={entry.key} entry={entry} lines={lines} />,
+                  phone
+                    ? <RulePhoneRow key={entry.key} entry={entry} onOpen={setOpen} />
+                    : <RuleRow key={entry.key} entry={entry} lines={lines} />,
                 )}
               </tbody>
             </table>

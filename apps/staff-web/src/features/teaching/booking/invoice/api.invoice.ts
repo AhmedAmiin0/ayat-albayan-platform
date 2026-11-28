@@ -44,7 +44,7 @@ export const threadMediaQuery = (phone: string) =>
     queryFn: () => apiFetch<ThreadMediaItem[]>(mediaPath(phone)),
   });
 
-/** GET /threads/:phone/media/:messageId — fetches (and caches) the file; a signed URL for the thumbnail. */
+/** GET /threads/:phone/media/:messageId: fetches (and caches) the file; a signed thumbnail URL. */
 export const threadMediaUrl = (phone: string, messageId: string) =>
   queryOptions({
     queryKey: threadMediaKeys.url(phone, messageId),
@@ -56,7 +56,7 @@ export const threadMediaUrl = (phone: string, messageId: string) =>
     retry: false,
   });
 
-/** GET /booking/makeup-candidates?studentId — missed, chargeable, not yet made up (last 60 days). */
+/** GET /booking/makeup-candidates?studentId: missed, chargeable, not made up (last 60 days). */
 export const makeupCandidatesQuery = (studentId: string) =>
   queryOptions({
     queryKey: bookingKeys.makeupCandidates(studentId),

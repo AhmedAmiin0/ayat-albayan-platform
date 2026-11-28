@@ -11,10 +11,7 @@ import {
 import { compareValues, matchesFilter } from './client-sort';
 
 export type SortDir = 'asc' | 'desc';
-export interface FilterOption {
-  value: string;
-  label: string;
-}
+export interface FilterOption { value: string; label: string }
 export type ColumnFilterDef = { kind: 'text' } | { kind: 'select'; options: FilterOption[] };
 
 /** Per-column classes: `className` styles the body cells, `headClassName` the <th>. */
@@ -64,7 +61,7 @@ export interface DataTableFilters {
   onClear?: (keys: string[]) => void;
 }
 
-/** Table options per mode: local sorting/filtering only in client mode, one column at a time. */
+/** Options per sort/filter mode: local sort/filter only in client mode, one column at a time. */
 export function sortFilterOptions(p: {
   sort?: unknown;
   clientSort?: boolean;

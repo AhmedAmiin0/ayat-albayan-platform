@@ -10,7 +10,7 @@ export interface InvoiceThumbProps {
   className?: string;
 }
 
-/** An invoice's thumbnail: the image itself, or a PDF tile (icon + name) when it is not an image or still loading. */
+/** An invoice's thumbnail: the image, or a PDF tile (icon + name) if not an image or loading. */
 export function InvoiceThumb({ src, mime, name, className }: InvoiceThumbProps) {
   if (canShow(mime) && src) {
     return (

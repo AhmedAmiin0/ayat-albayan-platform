@@ -19,7 +19,7 @@ export interface BookedPanelProps {
   teacherId: string;
   /** The family's zone, for the first lesson's local time. */
   tz: string;
-  /** The booking type: a subscription or makeup shows its invoice; a makeup never offers a subscription. */
+  /** A subscription or makeup shows its invoice; a makeup never offers a subscription. */
   kind?: BookingKind;
   /** A regular package offers subscribing this student (R-SUB-01). */
   subscribeFor?: PickedStudent | null;

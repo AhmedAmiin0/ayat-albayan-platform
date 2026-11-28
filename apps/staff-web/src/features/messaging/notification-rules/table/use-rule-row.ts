@@ -39,7 +39,7 @@ export interface RuleRowState {
   result: DraftResult;
   dirty: boolean;
   revert: () => void;
-  /** One PATCH with only the changed fields (nothing when the draft does not parse); onDone after it lands. */
+  /** One PATCH with only the changed fields (none if the draft does not parse); then onDone. */
   save: (onDone?: () => void) => void;
   /** The switch: one PATCH { enabled } (+ confirmText), saved at once. */
   setEnabled: (input: SwitchInput) => void;
@@ -50,7 +50,7 @@ export interface RuleRowState {
 const isEntry = (v: unknown): v is NotificationEntryView =>
   typeof v === 'object' && v !== null && 'key' in v && 'audience' in v;
 
-/** The answer replaces the row in every cached catalogue, then the catalogue and the settings refetch. */
+/** The answer replaces the row in every cached catalogue, then catalogue and settings refetch. */
 function afterSave(client: QueryClient, updated: unknown) {
   if (isEntry(updated)) {
     client.setQueriesData<NotificationsOverview>({ queryKey: catalogueKeys.all }, (old) =>

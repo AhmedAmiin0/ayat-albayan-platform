@@ -38,12 +38,25 @@ export function ActivityPage({ search, onSearch }: ActivityPageProps) {
               data={data.items}
               getRowId={(r) => r.id}
               emptyText={t.common.notFound}
-              sort={{ key: search.sort.sort, dir: search.sort.dir, onChange: (next) => onSearch(withSort(search, next)) }}
-              filters={{ values: search.filters, onChange: (key, value) => onSearch(withFilter(search, { key, value })), onClear: (keys) => onSearch(withoutFilters(search, keys)) }}
+              sort={{
+                key: search.sort.sort,
+                dir: search.sort.dir,
+                onChange: (next) => onSearch(withSort(search, next)),
+              }}
+              filters={{
+                values: search.filters,
+                onChange: (key, value) => onSearch(withFilter(search, { key, value })),
+                onClear: (keys) => onSearch(withoutFilters(search, keys)),
+              }}
               toolbar={{ total: data.total }}
             />
           )}
-          <Pager page={search.page} total={data.total} pageSize={data.pageSize} onPage={(page) => onSearch({ ...search, page })} />
+          <Pager
+            page={search.page}
+            total={data.total}
+            pageSize={data.pageSize}
+            onPage={(page) => onSearch({ ...search, page })}
+          />
         </>
       )}
     </>

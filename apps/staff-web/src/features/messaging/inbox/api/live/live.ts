@@ -24,7 +24,7 @@ export function useInboxLive(): boolean {
   return useSyncExternalStore(inboxLive.subscribe, inboxLive.isLive);
 }
 
-/** The open chat: its events re-read it (only while this window has focus: reading marks it read). */
+/** The open chat: its events re-read it only while this window has focus (a read marks it read). */
 export function useLiveChat(phone: string): void {
   useInboxLive();
   useEffect(() => {

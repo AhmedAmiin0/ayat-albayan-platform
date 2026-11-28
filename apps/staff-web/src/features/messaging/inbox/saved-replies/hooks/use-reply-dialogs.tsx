@@ -8,7 +8,10 @@ type Open =
   | { kind: 'delete'; reply: SavedReply }
   | null;
 
-/** The add / edit / delete dialogs of one list (`scope` for a new reply), opened from a row or a button. */
+/**
+ * The add / edit / delete dialogs of one list (`scope` for a new reply), opened from a row or a
+ * button.
+ */
 export function useReplyDialogs(scope: SavedReplyScope): {
   add: () => void;
   edit: (reply: SavedReply) => void;

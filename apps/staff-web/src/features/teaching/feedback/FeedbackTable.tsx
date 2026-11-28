@@ -11,7 +11,7 @@ import type { FeedbackListRow } from '@ab/shared';
 
 export interface FeedbackTableProps {
   rows: FeedbackListRow[];
-  /** The admin sees the teacher column (and filters by `teachers`); a teacher's own list does not. */
+  /** The admin sees the teacher column (filtered by `teachers`); a teacher's own list does not. */
   showTeacher: boolean;
   teachers?: FilterOption[];
   /** Server sort and column filters (R-NFR-08): the route's URL state. */

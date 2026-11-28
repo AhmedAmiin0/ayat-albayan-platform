@@ -46,7 +46,12 @@ export function InternalMeetingDialog({ onClose, onEnter = goTo }: Props) {
     </>
   );
   return (
-    <Dialog title={L.dialogTitle} description={t.meetingInvites.instantHint} onClose={onClose} actions={actions}>
+    <Dialog
+      title={L.dialogTitle}
+      description={t.meetingInvites.instantHint}
+      onClose={onClose}
+      actions={actions}
+    >
       {made ? (
         <CreatedMeeting made={made} />
       ) : (
@@ -55,7 +60,9 @@ export function InternalMeetingDialog({ onClose, onEnter = goTo }: Props) {
             {(p) => <Input {...p} value={title} maxLength={60} placeholder={L.titlePlaceholder} onChange={(e) => setTitle(e.target.value)} />}
           </Field>
           <InviteePicker picked={invitees} onPicked={setInvitees} />
-          {create.isError && <FormAlert>{meetingErrorText(create.error, t.meetings.internal.error)}</FormAlert>}
+          {create.isError && (
+            <FormAlert>{meetingErrorText(create.error, t.meetings.internal.error)}</FormAlert>
+          )}
         </div>
       )}
     </Dialog>

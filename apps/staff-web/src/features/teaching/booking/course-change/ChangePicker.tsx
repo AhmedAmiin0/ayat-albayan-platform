@@ -23,7 +23,8 @@ export function ChangePicker({ view, picks, onPicks, onNext, onBack }: ChangePic
   const { course, student } = view;
   const zoned = { ...withPicks(picks), kind: 'package' as const, tz: course.tz };
   const listed = dayPicks(zoned);
-  const note = course.perWeek === null ? null : pickProgress(t.booking, picks.length, course.perWeek);
+  const { perWeek } = course;
+  const note = perWeek === null ? null : pickProgress(t.booking, picks.length, perWeek);
   return (
     <div className="grid gap-4">
       <p className="rounded-md bg-sunk px-3.5 py-2.5 text-sm tabular-nums">
@@ -33,7 +34,7 @@ export function ChangePicker({ view, picks, onPicks, onNext, onBack }: ChangePic
       <section className="grid gap-2">
         <h3 className="text-sm font-semibold">{t.booking.courseChange.pickNew}</h3>
         <p className="text-xs text-ink-2">
-          {course.perWeek === null ? t.booking.pickDayTimes : counted(t.booking.pickNDays, course.perWeek)}
+          {perWeek === null ? t.booking.pickDayTimes : counted(t.booking.pickNDays, perWeek)}
         </p>
         <SlotPicker
           teacherId={course.teacherId}
@@ -43,10 +44,16 @@ export function ChangePicker({ view, picks, onPicks, onNext, onBack }: ChangePic
           value={picks[0] ?? null}
           also={picks.slice(1)}
           excludeCourse={course.subscriptionId}
-          onPick={(slot) => onPicks(togglePick({ picks: [...picks], slot: slot.starts_at, tz: course.tz }))}
+          onPick={(slot) =>
+            onPicks(togglePick({ picks: [...picks], slot: slot.starts_at, tz: course.tz }))
+          }
         />
       </section>
-      <DayTimesList picks={listed} tz={course.tz} onRemove={(at) => onPicks(picks.filter((p) => p !== at))} />
+      <DayTimesList
+        picks={listed}
+        tz={course.tz}
+        onRemove={(at) => onPicks(picks.filter((p) => p !== at))}
+      />
       {note && <p className="text-xs text-ink-2">{note}</p>}
       <div className="flex flex-wrap justify-end gap-2.5 border-t border-rule pt-4">
         {onBack && (

@@ -79,7 +79,7 @@ function LastSync({ at }: { at: string | undefined }) {
   );
 }
 
-/** The newer of two syncs by checked_at (a move's re-sync on the server beats an older session result). */
+/** The newer of two syncs by checked_at: a move's server re-sync beats an older session result. */
 export function newerSync(
   a: TemplateLineSync | null,
   b: TemplateLineSync | null,

@@ -38,7 +38,7 @@ async function openHero() {
   return { hero, drawer: within(screen.getByRole('dialog', { name: 'سهيلة' })) };
 }
 
-/** `auto`: settings.meeting_link_auto in GET /settings/public (the per-teacher flag wins, so it is ignored). */
+/** `auto`: settings.meeting_link_auto from GET /settings/public; the per-teacher flag wins. */
 function renderDash(
   me: TeacherMe | Error = ME,
   auto = false,

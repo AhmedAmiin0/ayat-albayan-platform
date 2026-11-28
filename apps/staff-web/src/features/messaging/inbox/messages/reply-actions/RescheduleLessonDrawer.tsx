@@ -6,8 +6,9 @@ import { Drawer, RescheduleForm, studentNames } from '@/features/teaching/schedu
 import { apiFetch, t } from '@ab/web-kit';
 
 /**
- * The reply's lesson as the admin's form needs it: GET /lessons?from&to (lessons.read) over the minute
- * it starts, picked by id. Not under ['lessons']: the form's own refresh would empty the drawer.
+ * The reply's lesson as the admin's form needs it: GET /lessons?from&to (lessons.read) over the
+ * minute it starts, picked by id. Not under ['lessons']: the form's own refresh would empty the
+ * drawer.
  */
 const readLesson = (lesson: ReplyLesson): Promise<LessonView | null> =>
   readLessonAt<LessonView>(apiFetch, { id: lesson.id, startsAt: lesson.starts_at });

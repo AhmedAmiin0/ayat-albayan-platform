@@ -36,7 +36,7 @@ export function RepliesPanel({ picker, listId, onAdd, onEdit, onDelete }: Replie
       ref={ref}
       aria-label={S.title}
       className="grid gap-1 overflow-hidden rounded-lg border border-rule bg-raised pb-1 shadow-pop"
-      // After «/» the message box drives the list: a click in it keeps the box's focus (and ↑ ↓ Enter Esc).
+      // After «/» the box drives the list: a click in it keeps the box's focus (↑ ↓ Enter Esc).
       onMouseDown={picker.bySlash ? (e) => e.preventDefault() : undefined}
     >
       {!picker.bySlash && <PanelHead picker={picker} listId={listId} />}

@@ -34,7 +34,7 @@ export function SalesRegisterDialog({
 }) {
   const queryClient = useQueryClient();
   const phone = thread.phone_e164;
-  // A draft for another lead, or with a first lesson now past, does not resume as it was (review M3).
+  // A draft for another lead, or with a first lesson now past, does not resume as it was (M3).
   const [saved] = useState(() => resumable(registerDrafts.get(phone), thread.lead_id, new Date()));
   // The «first lesson passed» line stays only until she picks a new time (round 3).
   const [pastShown, setPastShown] = useState(saved?.droppedPast ?? false);

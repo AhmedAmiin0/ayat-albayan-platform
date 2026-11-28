@@ -12,7 +12,7 @@ function chipOf(on: boolean, risky: boolean) {
     : ({ tone: 'neutral', glyph: 'struck' } as const);
 }
 
-/** The question before switching: turning ON says who is reached, OFF what stops (and what does not). */
+/** The question before switching: ON says who is reached, OFF what stops (and what does not). */
 const ask = (on: boolean) =>
   on
     ? { title: s.autoDisable, description: s.autoDisableConfirm, yes: s.autoDisableYes }
@@ -21,7 +21,7 @@ const ask = (on: boolean) =>
 /** OFF by default until the old Apps Script reminders stop (migration 162, docs/09 cut-over). */
 export function AutoMessagesSwitch({ settings }: { settings: AcademySettings }) {
   const on = settings.auto_messages_enabled;
-  // On before the cut-over is ticked: families may get the Apps Script reminder too (the admin's turn).
+  // On before the cut-over is ticked: families may also get the old Apps Script reminder.
   const risky = on && !settings.crm_cutover_done;
   const chip = chipOf(on, risky);
   const [confirming, setConfirming] = useState(false);

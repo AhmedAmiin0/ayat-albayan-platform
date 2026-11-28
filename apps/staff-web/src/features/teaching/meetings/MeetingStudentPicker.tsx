@@ -10,7 +10,7 @@ interface Props {
   onPicked: (students: MeetingStudent[]) => void;
 }
 
-/** The students of the instant lesson: the usual student search, each result a toggle, the picked ones as removable chips. */
+/** The instant lesson's students: the usual search, each hit a toggle, picks as removable chips. */
 export function MeetingStudentPicker({ picked, onPicked }: Props) {
   const [term, setTerm] = useState('');
   const query = useQuery({ ...studentListQuery(term, 1), enabled: term !== '' });
@@ -42,7 +42,10 @@ export function MeetingStudentPicker({ picked, onPicked }: Props) {
                 <input
                   type="checkbox"
                   checked={isPicked(s.id)}
-                  onChange={() => onPicked(toggleStudent(picked, { id: s.id, name: s.name, code: s.code, program: s.program }))}
+                  onChange={() => {
+                    const { id, name, code, program } = s;
+                    onPicked(toggleStudent(picked, { id, name, code, program }));
+                  }}
                   className="size-4 accent-[var(--lapis)]"
                 />
                 <span className="font-semibold">{s.name}</span>

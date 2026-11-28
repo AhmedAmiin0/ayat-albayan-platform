@@ -1,9 +1,9 @@
 import type { ButtonHTMLAttributes } from 'react';
 import { cn } from '@ab/web-kit';
 
-// Shaped like the toolbar's filter chips (ActiveFilterChips): a hairline pill, 32px from 640px with a
-// fine pointer, the 44px touch floor on phones and coarse pointers. The chosen one wears the mint
-// wash and the primary edge (radio-chips' checked look).
+// Shaped like the toolbar's filter chips (ActiveFilterChips): a hairline pill, 32px from 640px
+// with a fine pointer, the 44px touch floor on phones and coarse pointers. The chosen one wears
+// the mint wash and the primary edge (radio-chips' checked look).
 export const CHIP_CLASS = [
   'inline-flex min-h-8 shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-3 text-xs whitespace-nowrap',
   'transition-colors duration-[120ms] hover:bg-sunk motion-safe:active:scale-[0.98] max-sm:min-h-11 max-sm:px-4 pointer-coarse:min-h-11',

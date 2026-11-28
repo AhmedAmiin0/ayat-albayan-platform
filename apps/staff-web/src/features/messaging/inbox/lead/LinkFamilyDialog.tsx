@@ -48,7 +48,7 @@ export function LinkFamilyDialog({ leadId, phone, onClose, onDone }: LinkFamilyD
   });
   const link = useMutation({
     mutationFn: linkFamily,
-    // The toast first: in the admin inbox the lead panel (and this dialog) goes once the thread refetches.
+    // Toast first: in the admin inbox the lead panel and this dialog go once the thread refetches.
     onSuccess: async (r) => {
       onDone(linkedText(r));
       await refreshAfterLink(queryClient);
@@ -113,7 +113,8 @@ export function LinkFamilyDialog({ leadId, phone, onClose, onDone }: LinkFamilyD
           )}
         </Field>
       </form>
-      {/* The confirm line first: under 640px the dialog is a full-screen sheet and ten cards push the end off-screen. */}
+      {/* The confirm line first: under 640px the dialog is a full-screen sheet and ten cards
+          push the end off-screen. */}
       <div className="mt-4 grid gap-3" aria-live="polite">
         {picked && (
           <p className="text-sm font-semibold text-ink">

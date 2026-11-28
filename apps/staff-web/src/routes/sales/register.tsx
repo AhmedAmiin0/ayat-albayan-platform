@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { registerRedirect } from '@/features/sales/sales/registration/register-redirect';
 
-/** Old /sales/register links: registering starts in the chat, so they land on the inbox. */
+/** Old /sales/register links land on the inbox (that chat when known): registering starts there. */
 export const Route = createFileRoute('/sales/register')({
   beforeLoad: ({ search }) => {
     throw redirect(registerRedirect(search));

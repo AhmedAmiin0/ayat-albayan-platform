@@ -20,7 +20,10 @@ const CLIENT_CODES: readonly [(error: unknown) => boolean, string][] = [
   [isNoAnswer, SEND_UNCONFIRMED],
 ];
 
-/** The API's reason as an inbox.error key (409 session_closed, 400 invalid_phone…; a bare 403 'forbidden'). */
+/**
+ * The API's reason as an inbox.error key (409 session_closed, 400 invalid_phone…; a bare 403
+ * 'forbidden').
+ */
 function apiCode(error: unknown): string {
   const code = errorCode(error);
   if (!code && error instanceof ApiError && error.status === 403) return 'forbidden';

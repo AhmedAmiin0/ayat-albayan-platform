@@ -15,7 +15,10 @@ import { myPayoutsQuery } from './api';
 
 const col = createColumnHelper<DataTableFeatures, PayoutView>();
 
-/** The admin's payout columns without approve / pay: month, lessons, breakdown, amount, status (sortable; status filters). */
+/**
+ * The admin's payout columns without approve / pay: month, lessons, breakdown, amount, status
+ * (sortable; status filters).
+ */
 const COLUMNS = col.columns([
   col.accessor('month', {
     header: () => t.payouts.month,

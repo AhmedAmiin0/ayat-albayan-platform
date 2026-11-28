@@ -43,7 +43,10 @@ const courseParam = (s: Record<string, unknown>): Pick<InboxSearch, 'course'> =>
   return course ? { course } : {};
 };
 
-/** Route `validateSearch`: a bad phone closes the thread; blank search, unknown sort/status, a non-id list drop; bad page → 1. */
+/**
+ * Route `validateSearch`: a bad phone closes the thread; blank search, unknown sort/status, a
+ * non-id list drop; bad page → 1.
+ */
 export function parseInboxSearch(s: Record<string, unknown>): InboxSearch {
   const page = Number(s.page);
   const out: InboxSearch = { page: Number.isInteger(page) && page > 1 ? page : 1 };

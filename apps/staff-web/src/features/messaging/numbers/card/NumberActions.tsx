@@ -13,8 +13,9 @@ type Body = Parameters<typeof updateNumber>[0]['body'];
 
 /**
  * A number's buttons (numbers.manage only): edit, enable / disable, make / unset default (enabled
- * numbers only), and delete, offered only once the number is disabled. Whatever changes which number a
- * role sends from (turning off or unsetting a default, making one) and delete are asked first.
+ * numbers only), and delete, offered only once the number is disabled. Whatever changes which
+ * number a role sends from (turning off or unsetting a default, making one) and delete are asked
+ * first.
  */
 export function NumberActions({ view }: { view: NumberView }) {
   const [editing, setEditing] = useState(false);

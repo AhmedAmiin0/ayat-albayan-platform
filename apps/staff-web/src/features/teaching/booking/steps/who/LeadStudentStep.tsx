@@ -18,6 +18,9 @@ export function LeadStudentStep({ value, tz, onChange, title }: LeadStudentStepP
   const set = (patch: Partial<NewStudentDraft>) => onChange({ newStudent: { ...value, ...patch } });
   const phoneProblem = value.guardianPhone.trim() ? phoneError(value.guardianPhone) : undefined;
   const age = value.age ?? '';
+  const ageProblem = age.trim() ? ageError(age) : undefined;
+  const onName = (e: { target: { value: string } }) => set({ name: e.target.value });
+  const onGuardian = (e: { target: { value: string } }) => set({ guardianName: e.target.value });
 
   return (
     <div className="grid gap-x-5 gap-y-4 sm:grid-cols-2">
@@ -26,7 +29,7 @@ export function LeadStudentStep({ value, tz, onChange, title }: LeadStudentStepP
         <RequiredLegend />
       </div>
       <Field label={t.leads.studentName} required>
-        {(p) => <Input {...p} value={value.name} data-autofocus onChange={(e) => set({ name: e.target.value })} />}
+        {(p) => <Input {...p} value={value.name} data-autofocus onChange={onName} />}
       </Field>
       <Field label={t.guardians.phone} hint={t.guardians.phoneHint} error={phoneProblem} required>
         {(p) => (
@@ -44,11 +47,11 @@ export function LeadStudentStep({ value, tz, onChange, title }: LeadStudentStepP
       </Field>
       <ContactIsSelfField name="lead-contact-is-self" value={value.contactIsSelf === true}
         onChange={(contactIsSelf) => set({ contactIsSelf })} />
-      <AgeField value={age} error={age.trim() ? ageError(age) : undefined} onChange={(next) => set({ age: next })} />
+      <AgeField value={age} error={ageProblem} onChange={(next) => set({ age: next })} />
       <GenderField value={value.gender ?? ''} onChange={(gender) => set({ gender })} />
       <SourceField value={value.source ?? ''} onChange={(source) => set({ source })} />
       <Field label={t.guardians.name} required>
-        {(p) => <Input {...p} value={value.guardianName} onChange={(e) => set({ guardianName: e.target.value })} />}
+        {(p) => <Input {...p} value={value.guardianName} onChange={onGuardian} />}
       </Field>
       <Field label={t.students.tz}>
         {(p) => <TimeZoneSelect {...p} value={tz} onValue={(next) => onChange({ tz: next })} />}

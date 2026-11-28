@@ -34,10 +34,28 @@ interface Row {
   photo: string | null | undefined;
 }
 
+const dayOf = (row: Row, day: string): LessonView[] => row.days.get(day) ?? [];
+
 /** The grid's rows; days in `tz`, the viewer's zone. */
-function rowsOf(lessons: readonly LessonView[], teachers: readonly OverviewTeacher[] | undefined, tz: string): Row[] {
-  if (teachers) return boardRows(teachers, lessons, tz).map((r) => ({ ...r, id: r.teacher.id, name: teacherLabel(r.teacher) }));
-  return teacherRows(lessons, tz).map((r) => ({ id: r.teacher.id, name: teacherLabel(r.teacher), teacher: null, days: r.days, photo: r.teacher.avatar_url }));
+function rowsOf(
+  lessons: readonly LessonView[],
+  teachers: readonly OverviewTeacher[] | undefined,
+  tz: string,
+): Row[] {
+  if (teachers) {
+    return boardRows(teachers, lessons, tz).map((r) => ({
+      ...r,
+      id: r.teacher.id,
+      name: teacherLabel(r.teacher),
+    }));
+  }
+  return teacherRows(lessons, tz).map((r) => ({
+    id: r.teacher.id,
+    name: teacherLabel(r.teacher),
+    teacher: null,
+    days: r.days,
+    photo: r.teacher.avatar_url,
+  }));
 }
 
 /**
@@ -76,11 +94,15 @@ export function WeekGrid({ week, today, lessons, onOpen, teachers, now = new Dat
           {rows.map((row) => (
             <tr key={row.id} className="border-b border-rule align-top">
               <th scope="row" className="px-2 py-2.5 text-start font-semibold">
-                {row.teacher ? <TeacherCell teacher={row.teacher} now={now} photo={row.photo} /> : row.name}
+                {row.teacher ? (
+                  <TeacherCell teacher={row.teacher} now={now} photo={row.photo} />
+                ) : row.name}
               </th>
               {days.map((day) => (
                 <td key={day} className={cn('px-1 py-1.5', day === today && 'bg-gold-wash/40')}>
-                  {row.teacher && <DayFacts teacher={row.teacher} day={day} lessons={row.days.get(day) ?? []} now={now} />}
+                  {row.teacher && (
+                    <DayFacts teacher={row.teacher} day={day} lessons={dayOf(row, day)} now={now} />
+                  )}
                   <LessonChipList lessons={row.days.get(day) ?? []} onOpen={onOpen} />
                 </td>
               ))}

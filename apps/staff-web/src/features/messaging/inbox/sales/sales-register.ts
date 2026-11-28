@@ -10,7 +10,7 @@ export const canRegisterFrom = (th: ThreadView): th is ThreadView & { lead_id: s
   th.lead_status !== 'converted' &&
   th.lead_status !== 'lost';
 
-/** What the thread already knows prefills step 1: the number, the WhatsApp name and the lead's source. */
+/** Step 1 is prefilled with what the thread knows: the number, WhatsApp name and lead's source. */
 export function draftFromThread(th: ThreadView & { lead_id: string }): BookingDraft {
   const name = th.lead_name ?? th.display_name ?? undefined;
   const draft = draftFromLead(

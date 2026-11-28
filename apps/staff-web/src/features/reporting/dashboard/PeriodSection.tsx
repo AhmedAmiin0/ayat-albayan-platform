@@ -19,7 +19,7 @@ export interface PeriodSectionProps {
 
 const sub = 'text-sm font-semibold text-ink-2';
 
-/** The period block: one filter row, then funnel, money by month / source, and expenses (R-RPT-01/02). */
+/** Period block: one filter row, then funnel, money by month/source, and expenses (R-RPT-01/02). */
 export function PeriodSection({ period, onPeriod, data, stale }: PeriodSectionProps) {
   return (
     <section aria-labelledby="dash-period" className="grid grid-cols-1 gap-5">

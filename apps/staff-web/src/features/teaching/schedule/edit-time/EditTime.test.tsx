@@ -58,7 +58,8 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
     expect(
       screen.getByText(t.lessons.timeEdit.reasonLine.replace('{reason}', 'طلب ولي الأمر')),
     ).toBeTruthy();
-    expect(screen.getAllByText(t.lessons.timeEdit.tag)).toHaveLength(1); // the tag chip; the note starts with the same words
+    // The tag chip only; the note starts with the same words.
+    expect(screen.getAllByText(t.lessons.timeEdit.tag)).toHaveLength(1);
     expect(screen.queryByRole('button', { name: t.lessons.editTime })).toBeNull(); // no handler: read-only
   });
 
@@ -77,7 +78,8 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
     expect(line.textContent).toContain(t.schedule.viewerTime);
     expect(screen.getByText(t.lessons.timeEdit.sameLesson)).toBeTruthy();
     expect((screen.getByLabelText<HTMLInputElement>(t.lessons.timeEdit.notify)).checked).toBe(true);
-    expect(screen.queryByText(t.lessons.timeEdit.payoutWarn)).toBeNull(); // only a held lesson's payout moves
+    // Only a held lesson's payout moves.
+    expect(screen.queryByText(t.lessons.timeEdit.payoutWarn)).toBeNull();
 
     pick.save();
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.lessons.timeEdit.savedNotified));

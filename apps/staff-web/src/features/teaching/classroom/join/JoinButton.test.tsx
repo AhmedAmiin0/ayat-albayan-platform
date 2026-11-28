@@ -7,12 +7,12 @@ import { lesson } from '@/features/teaching/schedule/lesson/lesson-fixture';
 import { t } from '@ab/web-kit';
 import { JoinButton } from './JoinButton';
 
-// GET /settings/public never answers here: the window stays on the registry defaults (15 / 120 min).
+// GET /settings/public never answers here: the window keeps the registry defaults (15 / 120 min).
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch: () => new Promise(() => undefined) }));
 
 const L = lesson({ id: 'l-5', status: 'confirmed', starts_at: '2026-10-03T16:00:00.000Z', minutes: 60 });
 const at = (iso: string) => vi.setSystemTime(new Date(iso));
-/** The window comes from GET /settings/public; with no answer yet, the registry defaults (15 / 120 min). */
+/** The window comes from GET /settings/public; until it answers, the defaults (15 / 120 min). */
 const render = (ui: ReactElement) =>
   rtlRender(<QueryClientProvider client={new QueryClient()}>{ui}</QueryClientProvider>);
 

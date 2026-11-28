@@ -4,7 +4,7 @@ import type { Range } from '@/features/people/teachers/availability/grid';
 import { barBox } from '@/features/people/teachers/availability/track';
 import { cn } from '@ab/web-kit';
 
-// Hairline every 2h on the sunk track, from the inline-start (right in RTL), as DayTrack. docs/07 §8.
+// Hairline every 2h on the sunk track from inline-start (right in RTL), as DayTrack. docs/07 §8.
 const trackStyle: CSSProperties = {
   backgroundImage:
     'repeating-linear-gradient(to left, var(--rule) 0 1px, transparent 1px calc(100% / 8))',

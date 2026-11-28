@@ -24,16 +24,24 @@ export interface MissedLessonStepProps {
   onChange: (patch: Partial<Pick<BookingDraft, 'missed' | 'durationMin' | 'teacher' | 'startsAt'>>) => void;
 }
 
-/** The patch a pick makes: the missed lesson, its length, and no teacher or slot of the old pick. */
+/** A pick's patch: the missed lesson, its length, and no teacher or slot of the old pick. */
 function pickPatch(c: MakeupCandidate, current: BookingDraft['teacher']) {
   const durationMin = DURATIONS.find((d) => d === c.duration_min);
   return {
-    missed: { lessonId: c.lesson_id, startsAt: c.starts_at, teacherId: c.teacher.id, durationMin: durationMin ?? 45 },
+    missed: {
+      lessonId: c.lesson_id,
+      startsAt: c.starts_at,
+      teacherId: c.teacher.id,
+      durationMin: durationMin ?? 45,
+    },
     ...(durationMin ? { durationMin } : {}),
     ...(current && current.id !== c.teacher.id ? { teacher: null } : {}),
     startsAt: null,
   };
 }
+
+const lacks = (list: readonly MakeupCandidate[], id: string): boolean =>
+  list.length > 0 && !list.some((c) => c.lesson_id === id);
 
 /** The missed lesson's status chip, in the academy's words. */
 function MissedStatus({ status }: { status: LessonStatus }) {
@@ -63,7 +71,7 @@ export function MissedLessonStep({ draft, preselectId, onChange }: MissedLessonS
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
       {list.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
       {list.data?.length === 0 && <p className="text-sm text-ink-2">{preselectId ? t.booking.makeup.noneForLesson : t.booking.makeup.none}</p>}
-      {preselectId && !missed && list.data && list.data.length > 0 && !list.data.some((c) => c.lesson_id === preselectId) && (
+      {preselectId && !missed && list.data && lacks(list.data, preselectId) && (
         <p className="text-sm text-ink-2">{t.booking.makeup.noneForLesson}</p>
       )}
       <ul className="grid gap-2 sm:grid-cols-2">

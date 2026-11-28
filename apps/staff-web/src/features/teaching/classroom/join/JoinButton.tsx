@@ -54,7 +54,7 @@ export function EnterButton(props: Props) {
   );
 }
 
-/** The same button, but only for a lesson that can still take place (never a moved or cancelled one). */
+/** The same button, only for a lesson that can still take place (never moved or cancelled). */
 export function JoinButton({ lesson, ...rest }: Props & { lesson: { status: LessonStatus } }) {
   return isOpenLesson(lesson.status) ? <EnterButton lesson={lesson} {...rest} /> : null;
 }

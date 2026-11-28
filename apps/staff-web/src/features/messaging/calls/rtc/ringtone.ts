@@ -38,8 +38,8 @@ export function startRingtone(make: AudioCtor | null = audioCtor()): Ringtone {
       osc.stop(at + offset + 0.4);
     }
   };
-  // Autoplay policy: a context made before any gesture starts suspended; resume it now and again on the
-  // next pointerdown (the user touching the page) if it is still suspended.
+  // Autoplay policy: a context made before any gesture starts suspended; resume it now and again
+  // on the next pointerdown (the user touching the page) if it is still suspended.
   const resume = () => void ctx.resume().catch(() => undefined);
   const retry = () => {
     if (ctx.state === 'suspended') resume();

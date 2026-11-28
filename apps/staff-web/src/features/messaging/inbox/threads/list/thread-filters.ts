@@ -12,7 +12,10 @@ export interface ThreadFilterOptions {
   onFilter: (patch: Record<string, unknown>) => void;
 }
 
-/** The set order and lead status as removable chips; the unread tabs and the search box are their own controls. */
+/**
+ * The set order and lead status as removable chips; the unread tabs and the search box are their
+ * own controls.
+ */
 export function threadFilterChips({ search, mode, onFilter }: ThreadFilterOptions): FilterChip[] {
   return [
     ...chipIfSet({

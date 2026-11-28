@@ -38,12 +38,14 @@ export interface TemplateColumnsInput {
   saving: string | null;
   /** docs/23c decision 9; the pick is confirmed by the caller. */
   sendFrom: Omit<SendFromCellProps, 'tpl'>;
-  /** crm rows (docs/39): the status by hand as the fallback (`busy` = the key being saved) and the WABA name (meta too). */
+  /** crm rows (docs/39): manual status fallback (`busyKey` saving) and the WABA name (meta too). */
   crmStatus: { busyKey: string | null; onSet: CrmStatusActionsProps['onSet']; onEditName: (tpl: TemplateView) => void };
 }
 
 /** R-MSG-01: the whole registry is loaded, so it sorts and filters locally. */
-export function templateColumns({ onSubmit, onMove, onEdit, onStarter, saving, phones, factsOf, sendFrom, crmStatus }: TemplateColumnsInput) {
+export function templateColumns({
+  onSubmit, onMove, onEdit, onStarter, saving, phones, factsOf, sendFrom, crmStatus,
+}: TemplateColumnsInput) {
   const crmCell = (tpl: TemplateView) =>
     factsOf(tpl.line)?.provider === 'crm' ? (
       <>
@@ -136,7 +138,11 @@ export function templateColumns({ onSubmit, onMove, onEdit, onStarter, saving, p
       id: 'actions',
       header: () => t.templates.actions,
       cell: (c) => (
-        <RowActions tpl={c.row.original} onSubmit={onSubmit} onMove={onMove} onEdit={onEdit} target={factsOf(otherLine(c.row.original.line))} crm={crmCell(c.row.original)} name={metaName(c.row.original)} />
+        <RowActions
+          tpl={c.row.original} onSubmit={onSubmit} onMove={onMove} onEdit={onEdit}
+          target={factsOf(otherLine(c.row.original.line))}
+          crm={crmCell(c.row.original)} name={metaName(c.row.original)}
+        />
       ),
       meta: { className: 'max-sm:order-7', headClassName: 'w-px' },
     }),

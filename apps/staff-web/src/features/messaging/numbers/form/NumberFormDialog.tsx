@@ -16,7 +16,7 @@ import { useNumbersMutation } from '@/features/messaging/numbers/use-numbers-mut
 
 const s = t.numbers;
 
-/** POST for a new number, PATCH with only the changed fields for an edit (nothing changed: just close). */
+/** POST for a new number, PATCH with only the changed fields for an edit (none changed: close). */
 const saveNumber = async (input: {
   view?: NumberView;
   draft: ReturnType<typeof draftOf>;

@@ -41,7 +41,7 @@ export function TemplateComposer({ phone, context, teacher, reopen }: TemplateCo
   const me = useQuery(meQuery).data;
   const staff = useInboxMode() !== 'admin';
   const noneAllowed = useNoneAllowed(teacher);
-  // Teacher and sales modes are always restricted; in the admin inbox, a role without the permissions.
+  // Teacher and sales are always restricted; in the admin inbox, a role without the permissions.
   const restricted = staff || (me ? !sendsAllTemplates(me) : false);
   const approved = reopen?.list ?? allowedTemplates(templates.data, teacher);
   const lessons = context.lessons ?? [];
@@ -81,7 +81,7 @@ export function TemplateComposer({ phone, context, teacher, reopen }: TemplateCo
     if (tpl && lesson) setValues({ ...values, ...lessonValues(tpl, lesson) });
   };
   const missing = tpl && tried ? missingParams(tpl, values) : [];
-  // Teacher and sales with nothing allowed (or no messages.read): what she can do, not a disabled select (W7).
+  // Teacher/sales, nothing allowed or no messages.read: what she can do, no disabled select (W7).
   if (noneAllowed) return <p className="text-xs text-ink-2">{noneAllowedText(noneAllowed, t.inbox.composer.noAllowedHelp)}</p>;
 
   return (
@@ -117,7 +117,7 @@ export function TemplateComposer({ phone, context, teacher, reopen }: TemplateCo
         )}
       </Field>
       {templates.isSuccess && approved.length === 0 && (
-        // A restricted role lists only the allow-list: none ticked (or not imported yet) is not «nothing approved».
+        // Restricted: only the allow-list, so none ticked (or not imported) ≠ «nothing approved».
         <p className="text-xs text-ink-3">{restricted ? t.inbox.composer.noAllowed : t.inbox.composer.noApproved}</p>
       )}
       {templates.isError && <FormAlert>{t.common.error}</FormAlert>}

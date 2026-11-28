@@ -4,7 +4,7 @@ import { callApi } from '@/features/messaging/calls/api/calls-api';
 import { createCallPeer } from '@/features/messaging/calls/rtc/call-peer';
 import type { RtcDeps } from '@/features/messaging/calls/rtc/media';
 
-/** The web's side of the shared call steps: its API, ids and words (the browser has no speaker switch). */
+/** The web's side of the shared call steps: its API, ids and words (no speaker switch here). */
 export const webCalls: CallPlatform = {
   sends: callApi,
   requestId: () => crypto.randomUUID(),

@@ -63,7 +63,7 @@ export function BubbleActions({ message: m, menu, onMenu }: BubbleActionsProps) 
         <IconButton
           label={t.inbox.reply.action}
           aria-disabled={blocked ? true : undefined}
-          // Not a hidden copy of the notice: the composer already shows it once (e2e reads it by text).
+          // No hidden copy of the notice: the composer shows it once (e2e reads it by text).
           aria-description={blocked ?? undefined}
           title={blocked ?? t.inbox.reply.action}
           onClick={blocked ? undefined : () => actions.reply(m)}
@@ -75,7 +75,12 @@ export function BubbleActions({ message: m, menu, onMenu }: BubbleActionsProps) 
       <IconButton ref={trigger} label={t.inbox.reply.menu} aria-expanded={menu} className="rounded-full" onClick={() => onMenu(!menu)}>
         <Icon name="more" />
       </IconButton>
-      {menu && <BubbleMenu message={m} outbound={outbound} offers={offers} tools={tools} onClose={() => close(true)} onHide={() => setAsking(true)} />}
+      {menu && (
+        <BubbleMenu
+          message={m} outbound={outbound} offers={offers} tools={tools}
+          onClose={() => close(true)} onHide={() => setAsking(true)}
+        />
+      )}
       <HideConfirm message={m} open={asking} onClose={() => setAsking(false)} />
       {tools.toast}
     </div>

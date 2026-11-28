@@ -15,7 +15,7 @@ export type ScheduleSearch = {
   day?: string | undefined;
   /** Saturday of the Riyadh week shown. */
   week?: string | undefined;
-  /** Picked teachers; none = everyone. `?teacher=<id>` (older links, journeys 1 and 4) reads as one. */
+  /** Picked teachers; none = everyone. `?teacher=<id>` (old links, journeys 1, 4) reads as one. */
   teachers?: string[] | undefined;
   gender?: Gender | undefined;
   program?: Program | undefined;

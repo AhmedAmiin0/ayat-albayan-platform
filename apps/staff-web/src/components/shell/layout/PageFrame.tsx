@@ -29,7 +29,7 @@ export function PageFrame({
   return (
     <main className="flex min-h-0 min-w-0 flex-1 flex-col">
       <Page className={cn('flex min-h-0 flex-1 flex-col', pageClassName)}>
-        {/* data-page-scroll: e2e probes read this box; horizontal overflow stays inside it. */}
+        {/* data-page-scroll: e2e probes read this box (x-overflow stays in it, not the page). */}
         <div ref={scroll} data-page-scroll className={SCROLL}>
           {children}
         </div>

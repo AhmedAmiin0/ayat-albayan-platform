@@ -5,7 +5,7 @@ import { sendText } from '@/features/messaging/inbox/api/api';
 import { sendErrorText } from '@/features/messaging/inbox/composer/lib/send-error';
 import { showAnswer } from '@/features/messaging/inbox/api/send-cache';
 
-/** What goes to the family: always the Arabic text, whatever the UI language (parent-facing output). */
+/** What goes to the family: always the Arabic text, whatever the UI language (parent-facing). */
 const RESEND_TEXT = ar.inbox.resend.text;
 
 /** The bubble's clientRequestId is reused for every opening, so it sends once (rule 8). */
@@ -26,7 +26,7 @@ export function ResendDialog({
       showAnswer(queryClient, view);
     },
   });
-  // While it goes, the dialog stays: closing then could lose the answer of a send already on its way.
+  // While it goes, the dialog stays: closing could lose the answer of a send already on its way.
   const close = () => (send.isPending ? undefined : onClose());
   const actions = (
     <>

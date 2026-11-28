@@ -28,7 +28,7 @@ describe('TrialDateDialog states (PR #164 review)', () => {
   it('a failed history read says so, with «حاول مرة أخرى» that reads it again', async () => {
     apiFetch.mockRejectedValue(new ApiError(500, { code: 'internal' }));
     open();
-    expect(await screen.findByText(t.trialDate.loadError)).toBeTruthy(); // the history itself stays collapsed
+    expect(await screen.findByText(t.trialDate.loadError)).toBeTruthy(); // history stays collapsed
     const before = historyCalls();
     fireEvent.click(screen.getByRole('button', { name: t.trialDate.retry }));
     await waitFor(() => expect(historyCalls()).toBeGreaterThan(before));

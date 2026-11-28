@@ -11,7 +11,7 @@ export interface RuleSwitchInputProps {
   onChange: (checked: boolean) => void;
 }
 
-/** A checkbox with role=switch drawn as the settings track, with its state word; 44px hit area on phones. */
+/** A role=switch checkbox drawn as the settings track, with its state word; 44px phone target. */
 export function RuleSwitchInput({ checked, label, disabled, onChange }: RuleSwitchInputProps) {
   return (
     <span className="inline-flex items-center gap-2">

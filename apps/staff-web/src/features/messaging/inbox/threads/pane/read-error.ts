@@ -4,8 +4,8 @@ import { ApiError, t } from '@ab/web-kit';
 const ERRORS: Record<string, string | undefined> = t.inbox.error;
 
 /**
- * A failed thread load in words: the API's reason when it has one (403 not_your_thread…), a bare 403
- * is about reading the chat (not sending), else the generic error.
+ * A failed thread load in words: the API's reason when it has one (403 not_your_thread…), a
+ * bare 403 is about reading the chat (not sending), else the generic error.
  */
 export function readErrorText(error: unknown): string {
   const coded = ERRORS[errorCode(error) ?? ''];

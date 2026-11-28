@@ -23,7 +23,7 @@ export const templatesQuery = queryOptions({
   queryFn: () => apiFetch<TemplateView[]>('/messaging/templates'),
 });
 
-/** Both numbers as the server's env knows them (ids, driver, last sync): no Meta call, safe on mount. */
+/** Both numbers as the server env knows them (ids, driver, last sync): no Meta call. */
 export const templateLinesQuery = queryOptions({
   queryKey: templateKeys.lines(),
   queryFn: () => apiFetch<TemplateLineView[]>('/messaging/templates/lines'),
@@ -43,13 +43,13 @@ export const createTemplate = (input: TemplateCreateInput) =>
 export const submitTemplate = (key: string) =>
   apiSend<TemplateView>('POST', `/messaging/templates/${encodeURIComponent(key)}/submit`);
 
-/** The row now goes out from the other number; the API re-reads its status on that number's WABA. */
+/** The row now goes out from the other number; the API re-reads its status on that WABA. */
 export const moveTemplateLine = ({ key, line }: { key: string; line: WaLine }) =>
   apiSend<TemplateMoveView>('PATCH', `/messaging/templates/${encodeURIComponent(key)}/line`, {
     line,
   });
 
-/** docs/23c decision 9: the template's own number; null = its role's default (404 unknown_number). */
+/** docs/23c decision 9: the template's own number; null = role default (404 unknown_number). */
 export const setTemplateNumber = ({ key, number_id }: { key: string; number_id: string | null }) =>
   apiSend<TemplateNumberSetView>('PUT', `/messaging/templates/${encodeURIComponent(key)}/number`, {
     number_id,
@@ -95,7 +95,7 @@ interface CodeInput {
   code: string | undefined;
   /** Meta's own message or code (meta_error). */
   detail: unknown;
-  /** The line the API named (not_configured, needs_app_id, needs_meta_driver); notifications when none. */
+  /** The line the API named (not_configured, needs_app_id, needs_meta_driver); or notifications. */
   line: unknown;
 }
 

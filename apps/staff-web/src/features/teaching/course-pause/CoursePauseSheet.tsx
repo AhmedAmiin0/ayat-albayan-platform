@@ -10,7 +10,7 @@ import { PauseFields } from './PauseFields';
 interface CoursePauseSheetProps {
   studentId: string;
   onClose: () => void;
-  /** After the pause is saved and the student's queries re-read: the caller shows t.coursePause.done. */
+  /** After the save and the student's re-read; the caller shows t.coursePause.done. */
   onDone: (message: string) => void;
 }
 

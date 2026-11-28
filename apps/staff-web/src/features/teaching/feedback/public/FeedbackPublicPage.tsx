@@ -11,12 +11,8 @@ import { ThankYou } from './ThankYou';
 
 type Closing = 'sent' | 'already' | 'expired' | 'invalid';
 
-/** Which closing screen applies, if any: a sent form, a link already used, or a link that is not valid. */
-function closingOf(
-  outcome: 'sent' | PublicProblem | null,
-  loadProblem: PublicProblem | null,
-  used: boolean,
-): Closing | null {
+/** Which closing screen applies, if any: a sent form, a used link, or a link that is not valid. */
+function closingOf(outcome: 'sent' | PublicProblem | null, loadProblem: PublicProblem | null, used: boolean): Closing | null {
   if (outcome === 'sent') return 'sent';
   if (outcome === 'already' || loadProblem === 'already' || used) return 'already';
   if (outcome === 'expired' || loadProblem === 'expired') return 'expired';

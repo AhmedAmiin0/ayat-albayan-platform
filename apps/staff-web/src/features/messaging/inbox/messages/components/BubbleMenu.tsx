@@ -11,7 +11,7 @@ import { WhatsAppSendItem } from '@/features/messaging/inbox/messages/whatsapp-s
 
 export interface BubbleMenuProps {
   message: MessageView;
-  /** Opens toward the middle of the chat: leftward for ours (on the right), rightward for theirs. */
+  /** Opens toward the chat's middle: leftward for ours (on the right), rightward for theirs. */
   outbound: boolean;
   /** Closes the menu and puts focus back on its trigger (before the pick runs). */
   onClose: () => void;

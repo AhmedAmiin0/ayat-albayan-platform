@@ -11,10 +11,10 @@ import { bookingKeys } from '@/features/teaching/booking/booking.keys';
 const client = { apiFetch, apiSend };
 const trialCalls = { admin: trialDateCalls(client), sales: salesTrialDateCalls(client) };
 
-/** Under LESSONS_KEY: every lesson write (a booking, a move, a cancel) refreshes the history too. */
+/** Under LESSONS_KEY: every lesson write (booking, move, cancel) refreshes the history too. */
 export const TRIAL_DATES_KEY = lessonKeys.trialDates;
 
-/** GET {base}/trial-dates?studentId — every trial time picked for the student, newest pick first. */
+/** GET {base}/trial-dates?studentId: every trial time picked for the student, newest first. */
 export const trialHistoryQuery = (studentId: string, mode: BookingMode = 'admin') =>
   queryOptions({
     queryKey: lessonKeys.trialHistory(mode, studentId),
@@ -44,7 +44,7 @@ export const trialDateCheckQuery = (body: BookingRequest, mode: BookingMode = 'a
 export const createTrialDate = (body: BookingRequest, mode: BookingMode = 'admin') =>
   trialCalls[mode].pick(body);
 
-/** After a new trial date: lessons (the history and calendars are under it), students, chats and sales views. */
+/** After a new trial date: lessons (history and calendars), students, chats and sales views. */
 export async function refreshAfterTrialDate(queryClient: QueryClient): Promise<void> {
   await Promise.all(
     [LESSONS_KEY, STUDENTS_KEY, ['threads'], ['sales']].map((queryKey) =>

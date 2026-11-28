@@ -30,7 +30,7 @@ export function FilterPanel({
       title={t.table.filter}
       onClose={onClose}
       // A visible note only while a filter is set (an empty hint collapses on phones); the
-      // toolbar's own summary stays the one live region, so changes here are announced once.
+      // toolbar's summary stays the one live region, so changes made here are announced once.
       hint={
         count > 0 ? (
           <FilterSummary visible live={false} count={count} resultCount={resultCount} />

@@ -4,7 +4,7 @@
 export const switchInputClass =
   'peer absolute inset-0 z-10 m-0 size-full cursor-pointer opacity-0 disabled:cursor-not-allowed';
 
-/** Track and knob: the knob starts at inline-start (right in RTL) and slides to the end when on. */
+/** Track and knob: the knob starts at inline-start (right in RTL) and slides to the end when ON. */
 export function SwitchTrack() {
   return (
     <>

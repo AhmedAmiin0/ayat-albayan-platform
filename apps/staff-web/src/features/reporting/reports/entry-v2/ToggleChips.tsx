@@ -8,7 +8,7 @@ export interface ToggleChipsProps<V extends string> {
   onToggle: (value: V) => void;
 }
 
-/** Chips that turn on and off (aria-pressed): the tajweed topic and the quick notes to the family. */
+/** On/off chips (aria-pressed): the tajweed topic and the quick notes to the family. */
 export function ToggleChips<V extends string>({
   label,
   options,

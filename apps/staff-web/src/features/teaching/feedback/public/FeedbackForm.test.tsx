@@ -47,9 +47,9 @@ describe('FeedbackForm «رأيك يهمّنا»', () => {
     expect(at.every((i) => i >= 0)).toBe(true);
     expect([...at].sort((a, b) => a - b)).toEqual(at);
     expect(screen.getByLabelText(t.feedback.teacher)).toHaveProperty('readOnly', true);
-    expect(screen.getByLabelText<HTMLInputElement>(t.feedback.teacher).value).toBe('أبرار');
-    // The family can correct the number; the lesson type is the lesson's own, shown as a fixed line.
-    expect(screen.getByLabelText<HTMLInputElement>(t.feedback.contact).value).toBe('+201001234567');
+    expect((screen.getByLabelText<HTMLInputElement>(t.feedback.teacher)).value).toBe('أبرار');
+    // The family can correct the number; the lesson type is the lesson's own, as a fixed line.
+    expect((screen.getByLabelText<HTMLInputElement>(t.feedback.contact)).value).toBe('+201001234567');
     expect(screen.getByLabelText(t.feedback.contact)).toHaveProperty('readOnly', false);
     expect(screen.getByText(t.enums.feedbackKind.trial)).toBeTruthy();
     expect(screen.queryByText(t.enums.feedbackKind.subscription)).toBeNull();

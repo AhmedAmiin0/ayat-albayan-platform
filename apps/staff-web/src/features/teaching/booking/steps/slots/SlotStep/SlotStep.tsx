@@ -25,7 +25,7 @@ export function pickedText(startsAt: string, tz: string, clock: Clock & { tz: st
   return `${mine}${t.common.listSeparator}${t.booking.studentLocal.replace('{time}', local)}`;
 }
 
-/** A course's grid opens near its subscription's start: max(now, starts_on) (the picker never opens before this week). */
+/** A course's grid opens at max(now, starts_on): the picker never opens before this week. */
 export function courseNear(startsOn: string, now: Date = new Date()): string {
   const start = new Date(`${startsOn}T12:00:00.000Z`); // midday UTC: the same date in every zone we serve
   return (start > now ? start : now).toISOString();
@@ -42,7 +42,7 @@ export function SlotStep({ draft, onChange }: SlotStepProps) {
   return <Step draft={draft} onChange={onChange} />;
 }
 
-/** A package: a date and a time per lesson day (LessonRows), the days they make, the series check. */
+/** A package: a date and time per lesson day (LessonRows), the days they make, the series check. */
 function PackageTimes({ draft, onChange }: SlotStepProps) {
   return (
     <div className="grid gap-5">

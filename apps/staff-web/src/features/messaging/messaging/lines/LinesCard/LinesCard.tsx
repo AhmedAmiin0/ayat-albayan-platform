@@ -41,7 +41,7 @@ export function LinesCard() {
         </Button>
       </div>
       <p className="mb-2 max-w-[70ch] text-xs text-ink-2">{s.intro}</p>
-      {/* Announces the result when a check finishes; no role (settings specs: strict getByRole('status')). */}
+      {/* Announces a finished check; no role (settings specs: strict getByRole('status')). */}
       <div aria-live="polite" aria-busy={check.isPending}>
         {WA_LINES.map((line) => (
           <LineRow key={line} line={line} view={views?.find((v) => v.line === line) ?? null} />

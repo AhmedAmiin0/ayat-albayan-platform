@@ -50,6 +50,6 @@ export function useNoneAllowed(teacher: boolean): NoneReason | null {
     : null;
 }
 
-/** The refusal line: the permission one for no messages.read (round 2 J), else the template one given. */
+/** The refusal line: the permission one without messages.read, else the template one given. */
 export const noneAllowedText = (reason: NoneReason, noTemplate: string): string =>
   reason === 'no_permission' ? t.inbox.composer.noPermissionHelp : noTemplate;

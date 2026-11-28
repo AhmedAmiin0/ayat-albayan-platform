@@ -9,7 +9,7 @@ import { TrialDateDialog } from './dialog/TrialDateDialog';
 import { TrialHistoryBody, TrialHistoryTitle } from './history/TrialHistoryBody';
 import type { StudentProfile } from '@ab/shared';
 
-/** GET /students/:id returns every column; the teacher preference is one of them (migration 070). */
+/** GET /students/:id returns every column, the teacher preference among them (migration 070). */
 type Profile = StudentProfile & { teacher_gender_pref?: Gender | null };
 
 /** Admin routes need booking.write; a role without it sees no section rather than a 403. */

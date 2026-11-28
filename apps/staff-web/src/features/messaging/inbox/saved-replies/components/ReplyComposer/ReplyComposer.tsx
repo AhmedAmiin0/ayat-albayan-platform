@@ -31,7 +31,7 @@ export interface ReplyComposerProps {
   leading: ReactNode;
 }
 
-/** Puts the caret at the end, back in the box (after a pick or a close the picker's search had the focus). */
+/** Puts the caret back at the box's end (after a pick or close the picker's search had focus). */
 function focusBox(id: string): void {
   requestAnimationFrame(() => {
     const box = document.getElementById(id);
@@ -66,7 +66,8 @@ export function ReplyComposer({ thread, context, leading }: ReplyComposerProps) 
           failed: null,
         }
       : null;
-    // A pick that replaces the box (a «/» token or an empty box) replaces its file too; one added after text keeps it.
+    // A pick that replaces the box (a «/» token or an empty box) replaces its file too;
+    // one added after text keeps it.
     if (next || replacesBox(before)) setStaged(phone, next);
     focusBox(boxId);
   };

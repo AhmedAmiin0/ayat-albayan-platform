@@ -12,7 +12,9 @@ import { WindowBanner } from './WindowBanner';
 import { CallButton } from '@/features/messaging/calls';
 import { ChatSearchBar, ChatSearchToggle } from '@/features/messaging/inbox/search';
 
-export function ThreadHeaderPhone({ thread: th, listSearch, headingId, badge, action, line, lists, callable = false }: ThreadHeaderProps) {
+export function ThreadHeaderPhone({
+  thread: th, listSearch, headingId, badge, action, line, lists, callable = false,
+}: ThreadHeaderProps) {
   const kind = threadKind(th);
   const mode = useInboxMode();
   const title = threadTitle(th, mode);

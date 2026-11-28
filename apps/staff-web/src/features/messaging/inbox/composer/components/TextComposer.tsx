@@ -69,7 +69,8 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
   }, [text]);
   // A correction leaves room for the API's correction prefix: the same limit as threadTextSchema.
   const tooLong = text.length > WA_TEXT_MAX - (fix.correctsId ? CORRECTION_PREFIX_ROOM : 0);
-  // The failure's line follows the draft (a box mounted since the send still says why), else this box's.
+  // The failure's line follows the draft (a box mounted since the send still says why), else
+  // this box's.
   // Not a stored session_closed: this box mounts only where a text goes (ComposerPhone), and the
   // closed-window notice replaces it where none can (round 3).
   const stored = draft.failed?.code === 'session_closed' ? null : draft.failed;
@@ -111,7 +112,8 @@ export function TextComposer({ phone, leading, extras }: TextComposerProps) {
           rows={1}
           value={text}
           onChange={(e) => write(e.target.value)}
-          // Desktop: Enter sends, Shift+Enter is a new line. Phones: Enter is a new line. Ctrl/⌘+Enter always sends.
+          // Desktop: Enter sends, Shift+Enter is a new line. Phones: Enter is a new line.
+          // Ctrl/⌘+Enter always sends.
           {...extras?.boxProps}
           onKeyDown={(e) => {
             if (extras?.onKey?.(e) || !sendsOnKey(e, desktop)) return;

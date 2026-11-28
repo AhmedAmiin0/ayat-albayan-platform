@@ -40,7 +40,7 @@ export function LeadStatusChange({ lead, onDone }: LeadStatusChangeProps) {
         if (to) change.mutate({ id: lead.id, status: to });
       }}
     >
-      {/* Label linked by id, not wrapping: a wrapped select puts its shown option into the name. */}
+      {/* Label linked by id, not wrapping: a wrapped select puts its shown option in the name. */}
       <div className="grid min-w-0 flex-1 gap-1.5 text-sm font-semibold">
         <label htmlFor={selectId}>{t.leads.changeStatus}</label>
         <Select

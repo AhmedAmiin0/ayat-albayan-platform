@@ -56,8 +56,8 @@ describe('FixedTopBarLayout', () => {
     const all = screen.getAllByText(t.runningHead.riyadh);
     const riyadh = all.filter((el) => header().contains(el));
     expect(riyadh).toHaveLength(1);
-    // Below 1340px the inline clocks (about 1190px ar, 1324px en) would paint under the bell:
-    // hidden there, the separate row shows until 1340px; the inline box clips as a guard.
+    // Below 1340px the inline clocks (ar ~1190px, en ~1324px, real fonts) would paint under the
+    // bell: hidden there, the separate row shows until 1340px; the inline box clips as a guard.
     const inline = riyadh[0]?.closest('.min-h-0');
     const box = inline?.parentElement?.className.split(' ');
     expect(box).toEqual(

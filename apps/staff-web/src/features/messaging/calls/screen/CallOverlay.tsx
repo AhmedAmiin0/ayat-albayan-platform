@@ -42,7 +42,7 @@ function SessionView({ s }: { s: CallSessionApi }) {
   return <CallScreen session={session} row={s.row} phase={phase} actions={actions} />;
 }
 
-/** What the calls put above every page: the ring, the call or its bar, and the permission dialog. */
+/** What calls put above every page: the ring, the call or its bar, and the permission dialog. */
 export function CallOverlay({ s, showsPhone, ask, onAsk, onSilence }: CallOverlayProps) {
   const { store, incoming } = s;
   const caller = incoming ? callerOf(incoming, showsPhone) : '';

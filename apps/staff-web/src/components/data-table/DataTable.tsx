@@ -53,7 +53,7 @@ export interface DataTableProps<T extends RowData> {
   stacked?: boolean;
   /** A list screen's main table: a fixed-height box (TableBox) that scrolls inside itself. */
   fill?: boolean;
-  /** Server sort (R-NFR-08): header clicks report `{ key, dir }`; rows keep their order. */
+  /** Server sort (paginated lists, R-NFR-08): clicks report `{ key, dir }`; row order kept. */
   sort?: DataTableSort;
   /** Sort the loaded rows locally: every accessor column, Arabic collation. */
   clientSort?: boolean;
@@ -109,7 +109,7 @@ export function DataTable<T extends RowData>({
           resultCount={clientFilter && !filters ? rows.length : undefined}
         />
       )}
-      {/* `relative` keeps absolute sr-only text inside the scroll clip at phone width. */}
+      {/* `relative` keeps absolute sr-only text inside the scroll clip (phone width). */}
       <div data-table-box={fill || undefined} className={cn('relative overflow-x-auto', fill && tableBoxClass, stacked && stackedClass)}>
         {/* An empty fixed-height box: the one «nothing here» row fills it, its text centred. */}
         <table aria-label={label} className={cn('w-full border-collapse text-sm', fill && rows.length === 0 && 'h-full')}>

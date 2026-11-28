@@ -20,6 +20,13 @@ const idPatch = (id: (typeof ID_FIELDS)[number], value: string): Partial<NumberD
   return patch;
 };
 
+const purposePatch = (draft: NumberDraft, value: string): Partial<NumberDraft> => ({
+  purpose: NUMBER_PURPOSES.find((l) => l === value) ?? draft.purpose,
+});
+const providerPatch = (draft: NumberDraft, value: string): Partial<NumberDraft> => ({
+  provider: WA_PROVIDERS.find((v) => v === value) ?? draft.provider,
+});
+
 export interface NumberFormFieldsProps {
   draft: NumberDraft;
   errors: DraftErrors;
@@ -34,21 +41,18 @@ export function NumberFormFields({ draft, errors, onChange }: NumberFormFieldsPr
   return (
     <div className="grid gap-4">
       <Field label={f.label} required error={errors.label}>
-        {(p) => <Input {...p} value={draft.label} maxLength={60} onChange={(e) => onChange({ label: e.target.value })} />}
+        {(p) => (
+          <Input {...p} value={draft.label} maxLength={60}
+            onChange={(e) => onChange({ label: e.target.value })} />
+        )}
       </Field>
       <Field
         label={f.purpose}
         hint={draft.purpose === 'calls' ? t.numbers.form.callsHint : undefined}
       >
         {(p) => (
-          <Select
-            {...p}
-            value={draft.purpose}
-            onChange={(e) => {
-              const purpose = NUMBER_PURPOSES.find((l) => l === e.target.value) ?? draft.purpose;
-              onChange({ purpose });
-            }}
-          >
+          <Select {...p} value={draft.purpose}
+            onChange={(e) => onChange(purposePatch(draft, e.target.value))}>
             {NUMBER_PURPOSES.map((l) => (
               <option key={l} value={l}>{t.numbers.purpose[l]}</option>
             ))}
@@ -57,7 +61,8 @@ export function NumberFormFields({ draft, errors, onChange }: NumberFormFieldsPr
       </Field>
       <Field label={f.provider} error={errors.provider}>
         {(p) => (
-          <Select {...p} value={draft.provider} onChange={(e) => onChange({ provider: WA_PROVIDERS.find((v) => v === e.target.value) ?? draft.provider })}>
+          <Select {...p} value={draft.provider}
+            onChange={(e) => onChange(providerPatch(draft, e.target.value))}>
             {WA_PROVIDERS.map((v) => (
               <option key={v} value={v}>{t.numbers.provider[v]}</option>
             ))}

@@ -17,7 +17,7 @@ import { ChatUploadError } from '@/features/messaging/inbox/api/api.files';
 
 export const SAVED_REPLIES_KEY = ['saved-replies'] as const;
 
-/** Both lists (shared first), each by position then title; another admin may change them meanwhile. */
+/** Both lists (shared first) by position then title; another admin may change them meanwhile. */
 export const savedRepliesQuery = queryOptions({
   queryKey: SAVED_REPLIES_KEY,
   queryFn: () => apiFetch<SavedReply[]>('/saved-replies'),

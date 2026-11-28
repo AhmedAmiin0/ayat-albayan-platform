@@ -19,8 +19,8 @@ import { sectionTitle } from '@/features/reporting/dashboard/shared/Bar';
 import { isLiveNow, todaysLessons } from './today';
 
 /**
- * Folds by the card's own width (container query), not the screen's: the card is a
- * third of the dashboard on a wide screen, so the join buttons go under the details until it is 36rem.
+ * Folds by the card's own width (container query), not the screen's: the card is a third of the
+ * dashboard on a wide screen, so the join buttons go under the details until it is 36rem.
  */
 function LessonItem({ lesson, live }: { lesson: LessonView; live: boolean }) {
   const chip = useLessonStatusText().chip(lesson.status);
@@ -65,7 +65,7 @@ function LessonItem({ lesson, live }: { lesson: LessonView; live: boolean }) {
           {live && <span className="text-xs font-semibold text-ok">{t.dashboard.home.live}</span>}
         </span>
       </div>
-      {/* empty:hidden: a lesson without a room (StaffJoinButton renders nothing) adds no row gap. */}
+      {/* empty:hidden: a lesson with no room (StaffJoinButton renders nothing) adds no gap. */}
       <div data-join className="col-start-2 empty:hidden @xl:col-start-3 @xl:row-start-1">
         <StaffJoinButton lesson={lesson} />
       </div>

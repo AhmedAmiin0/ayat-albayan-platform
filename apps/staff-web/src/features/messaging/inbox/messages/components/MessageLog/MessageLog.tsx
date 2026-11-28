@@ -59,9 +59,15 @@ function Day({ label }: { label: string }) {
 
 /** Stays pinned to the newest unless scrolled up; her own send always snaps to the bottom. */
 export function MessageLog({ lessons, ...props }: MessageLogProps) {
-  // The chat's WhatsApp calls (docs/28), at their time among the messages; nothing asked while calls are off.
-  const log = useCallsEnabled() ? <WithThreadCalls phone={props.phone}>{(calls) => <LogView {...props} calls={calls} />}</WithThreadCalls> : <LogView {...props} />;
-  return lessons ? <ReplyActionsProvider phone={props.phone} lessons={lessons}>{log}</ReplyActionsProvider> : log;
+  // The chat's WhatsApp calls (docs/28) among the messages; nothing is asked while calls are off.
+  const log = useCallsEnabled() ? (
+    <WithThreadCalls phone={props.phone}>
+      {(calls) => <LogView {...props} calls={calls} />}
+    </WithThreadCalls>
+  ) : <LogView {...props} />;
+  return lessons ? (
+    <ReplyActionsProvider phone={props.phone} lessons={lessons}>{log}</ReplyActionsProvider>
+  ) : log;
 }
 
 function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys, fill = 'shell', canCall = false, calls, anchor }: MessageLogProps & { calls?: readonly CallView[] | undefined }) {
@@ -69,7 +75,7 @@ function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys,
   const pinned = useRef(true);
   const newest = messages.at(-1)?.id;
   const mine = useLastOwnSend(phone);
-  // Her send recorded before its row arrived, or (a poll first) after: either way the log follows it.
+  // Her send, recorded before its row arrived or (a poll first) after: either way the log follows.
   const own = !!newest && newest === mine;
   // The newest id she had seen when she scrolled up; null while pinned at the bottom.
   const [awayAt, setAwayAt] = useState<string | null>(null);
@@ -115,7 +121,7 @@ function LogView({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys,
         </div>
       )}
       <div role="log" aria-label={t.messages.log}>
-        {/* minmax(0,1fr): a long unbroken link never widens the column past the chat (it scrolled sideways). */}
+        {/* minmax(0,1fr): a long unbroken link never widens the column past the chat. */}
         <ol className="grid grid-cols-[minmax(0,1fr)] gap-2.5">
           {items.map((item) =>
             item.kind === 'day' ? (

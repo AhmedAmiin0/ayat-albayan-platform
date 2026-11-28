@@ -30,14 +30,14 @@ function problemText(error: unknown, cycle: ClockCycle): string {
 interface Props {
   linkToken: string;
   make?: () => RoomClient;
-  /** The public join call: the lesson link's by default, an internal meeting's (/m/:token) otherwise. */
+  /** The public join call: the lesson link's by default, else an internal meeting's (/m/:token). */
   joinWith?: NamedJoin;
   /** Heading and intro; the lesson's words by default. */
   title?: string;
   intro?: string;
-  /** A refused join in the page's own words (a meeting's, meetingJoinProblem); the lesson's by default. */
+  /** A refused join in the page's words (a meeting's: meetingJoinProblem); else the lesson's. */
   problem?: (error: unknown) => string;
-  /** The link names its student (the family app's signed link): no name step, the API takes theirs. */
+  /** The link names its student (the family app's signed link): no name step, the API uses it. */
   knownStudent?: boolean;
 }
 
@@ -63,7 +63,8 @@ function sendFor({ known, linkToken, name, joinWith }: SendInput): Send | null {
 export function GuestJoinPage(props: Props) {
   const known = props.knownStudent === true;
   const words = known ? t.classroom.guest.introKnown : t.classroom.guest.intro;
-  const { linkToken, make, joinWith = joinAsGuest, title = t.classroom.guest.title, intro = words, problem } = props;
+  const { linkToken, make, joinWith = joinAsGuest, problem } = props;
+  const { title = t.classroom.guest.title, intro = words } = props;
   const { cycle } = useClock();
   const problemOf = problem ?? ((e: unknown) => problemText(e, cycle));
   const [name, setName] = useState('');
@@ -89,7 +90,11 @@ export function GuestJoinPage(props: Props) {
         <Cartouche>{title}</Cartouche>
         <p className="text-body text-ink-2">{intro}</p>
         {known ? null : (
-          <Field label={t.classroom.guest.name} required {...(missing && { error: t.common.required })}>
+          <Field
+            label={t.classroom.guest.name}
+            required
+            {...(missing && { error: t.common.required })}
+          >
             {(p) => (
               <Input {...p} value={name} maxLength={30} autoComplete="off" placeholder={t.classroom.guest.namePlaceholder} onChange={(e) => setName(e.target.value)} />
             )}

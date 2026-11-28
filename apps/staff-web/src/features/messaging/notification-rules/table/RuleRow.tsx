@@ -22,7 +22,7 @@ interface ViewProps extends RuleRowProps {
   row: RuleRowState | null;
 }
 
-/** May this user edit this row here? (notifications.manage, a v2 rule that is editable, not locked). */
+/** May this user edit this row here? (notifications.manage, an editable v2 rule, not locked). */
 export function editableRule(
   entry: NotificationEntryView,
   canManage: boolean,

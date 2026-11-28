@@ -62,7 +62,7 @@ describe('«ردودي» behind «إدارة» in the picker', () => {
     const other = { ...MINE, id: 'r-4', title: 'تذكير', body: 'موعد الحلقة غدًا', position: 1 };
     await openMine([...REPLIES, other]);
     const second = await screen.findByRole('option', { name: /تذكير/ });
-    // The pointer crosses row 2 on its way to row 1's buttons: the highlight moves, the target does not.
+    // The pointer crosses row 2 on the way to row 1's buttons: the highlight moves, not the target.
     fireEvent.mouseEnter(second);
     expect(second.getAttribute('aria-selected')).toBe('true');
     fireEvent.click(screen.getByRole('button', { name: S.editReply.replace('{title}', 'متابعة') }));

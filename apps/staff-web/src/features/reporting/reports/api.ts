@@ -89,7 +89,7 @@ export async function uploadAttachment({
 
 /**
  * Arabic line for a failed report call: the domain `code` (docs/11 §3), or the first validation
- * issue (`missing_grades`, `attachment_type`, …), else the generic error (@ab/client-core, docs/27 E5).
+ * issue (`missing_grades`, `attachment_type`, …), else the generic error (client-core, docs/27 E5).
  */
 export const reportErrorText: (error: unknown) => string = reportErrorWords(() => ({
   errors: t.reports.error,

@@ -9,7 +9,10 @@ export interface MemberIntent {
 export interface MemberQueueDeps {
   /** PUT (in) / DELETE (out). */
   send: (intent: MemberIntent) => Promise<unknown>;
-  /** After the box's last save: refetch the lists and the chat (awaited before the box follows the cache). */
+  /**
+   * After the box's last save: refetch the lists and the chat (awaited before the box follows the
+   * cache).
+   */
   settle: () => Promise<unknown>;
   /** The box's final save failed. */
   onFail: () => void;
@@ -36,7 +39,10 @@ export function subscribeMemberQueue(listener: () => void): () => void {
 
 export const memberQueueSnapshot = () => wanted;
 
-/** The chat's lists as the checklist shows them: the cached membership, with every in-flight box's intent on top. */
+/**
+ * The chat's lists as the checklist shows them: the cached membership, with every in-flight box's
+ * intent on top.
+ */
 export function overlayIntents(
   cached: Iterable<string>,
   phone: string,
@@ -56,7 +62,10 @@ export function overlayIntents(
 /** Every toggle's number per box, so a toggle during the refetch is never lost. */
 const seqs = new Map<string, number>();
 
-/** Saves until the server holds the box's latest intent; sends nothing while a save of that box is in flight. */
+/**
+ * Saves until the server holds the box's latest intent; sends nothing while a save of that box is
+ * in flight.
+ */
 async function drain(key: string, intent: MemberIntent, deps: MemberQueueDeps) {
   let done: number | undefined;
   let saved: boolean | null = null;
@@ -70,7 +79,8 @@ async function drain(key: string, intent: MemberIntent, deps: MemberQueueDeps) {
         saved = want;
         failed = false;
       } catch {
-        // The server's state is unknown: a newer intent is always sent; otherwise the box follows the refetch.
+        // The server's state is unknown: a newer intent is always sent; otherwise the box
+        // follows the refetch.
         saved = null;
         failed = true;
       }

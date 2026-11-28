@@ -4,7 +4,10 @@ export interface PickerKeys {
   /** The highlighted row (aria-activedescendant), clamped to the list. */
   active: number;
   setActive: (index: number) => void;
-  /** ↑ ↓ move, Enter picks (and is taken even on an empty list), Esc closes; true when the key was the picker's (the caller stops it). */
+  /**
+   * ↑ ↓ move, Enter picks (taken even on an empty list), Esc closes; true when the key was the
+   * picker's (the caller stops it).
+   */
   onKey: (e: KeyboardEvent<HTMLElement>) => boolean;
 }
 

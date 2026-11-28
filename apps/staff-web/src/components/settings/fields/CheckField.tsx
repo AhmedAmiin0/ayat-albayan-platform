@@ -8,7 +8,7 @@ export interface CheckFieldProps extends RowExtras {
   hint?: string;
 }
 
-/** An on/off setting: a checkbox drawn as a switch, still a checkbox to assistive tech. */
+/** On/off setting: a checkbox drawn as a switch (still a checkbox to assistive tech and tests). */
 export function CheckField({ label, checked, onChange, hint, ...row }: CheckFieldProps) {
   return (
     <SettingRow label={label} hint={hint} {...row}>

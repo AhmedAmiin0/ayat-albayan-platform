@@ -4,11 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { t } from '@ab/web-kit';
 import { DataTable, type DataTableFeatures } from './DataTable';
 
-interface Row {
-  id: string;
-  name: string;
-  lessons: number;
-}
+interface Row { id: string; name: string; lessons: number }
 
 const col = createColumnHelper<DataTableFeatures, Row>();
 const columns = col.columns([

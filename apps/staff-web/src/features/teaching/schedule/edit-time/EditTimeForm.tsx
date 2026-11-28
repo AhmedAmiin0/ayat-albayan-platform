@@ -19,7 +19,10 @@ export interface EditTimeFormProps {
   onDone: (message: string) => void;
 }
 
-const OVERRIDE = { override: t.lessons.timeEdit.overrideEdit, reason: t.lessons.timeEdit.overrideReasonEdit };
+const OVERRIDE = {
+  override: t.lessons.timeEdit.overrideEdit,
+  reason: t.lessons.timeEdit.overrideReasonEdit,
+};
 
 /** Edits this lesson in place (R-SCH-11); a closed payout month refuses length changes. */
 export function EditTimeForm({ lesson, onBack, onDone }: EditTimeFormProps) {
@@ -33,22 +36,27 @@ export function EditTimeForm({ lesson, onBack, onDone }: EditTimeFormProps) {
   const [notify, setNotify] = useState(true);
   const [missing, setMissing] = useState(false);
   const [done, setDone] = useState<TimeEditResult | null>(null);
-  // A closed payout month refused a length change: kept here, outside save.reset(), until the length is back.
+  // A closed payout month refused a length change: kept outside save.reset() till it is undone.
   const [lock, setLock] = useState<{ month: string; status: string } | null>(null);
 
   const choice = { ...value, tz };
   const change = changeOf(was, choice);
   const changed = change.start || change.duration;
-  const sameDay = [...new Set([tz, ...lesson.students.map((s) => s.tz)])].map((z) => ({ tz: z, date: zonedPartsIn(new Date(lesson.starts_at), z).date }));
+  const expected = { expectedStartsAt: lesson.starts_at, expectedEndsAt: lesson.ends_at };
+  const zones = [...new Set([tz, ...lesson.students.map((s) => s.tz)])];
+  const sameDay = zones.map((z) => ({
+    tz: z,
+    date: zonedPartsIn(new Date(lesson.starts_at), z).date,
+  }));
 
   const save = useMutation({
     mutationFn: (override?: string) =>
       editLessonTime({
         id: lesson.id,
-        body: editBody({ mode, expectedStartsAt: lesson.starts_at, expectedEndsAt: lesson.ends_at, choice, reason: value.reason, notify, override }),
+        body: editBody({ mode, ...expected, choice, reason: value.reason, notify, override }),
       }),
     onSuccess: async (result) => {
-      if (needsFollowUp(result)) return setDone(result);
+      if (needsFollowUp(result)) {  setDone(result);; return; }
       await queryClient.invalidateQueries({ queryKey: LESSONS_KEY });
       onDone(savedMessage(result));
     },

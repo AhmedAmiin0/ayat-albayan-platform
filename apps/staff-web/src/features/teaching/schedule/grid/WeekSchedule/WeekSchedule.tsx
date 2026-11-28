@@ -54,11 +54,14 @@ export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
   const [openId, setOpenId] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const all = overview.data?.teachers ?? [];
-  const teachers = filterTeachers(all, { program: search.program, gender: search.gender, ids: search.teachers });
+  const { program, gender, status, closed } = search;
+  const teachers = filterTeachers(all, { program, gender, ids: search.teachers });
   const teacherIds = new Set(teachers.map((x) => x.id));
-  const shown = filterLessons(overview.data?.lessons ?? [], { status: search.status, showClosed: search.closed, teacherIds });
+  const lessons = overview.data?.lessons ?? [];
+  const shown = filterLessons(lessons, { status, showClosed: closed, teacherIds });
+  const byId = (l: LessonView) => l.id === openId;
   // A proposal's lesson may sit in another week than the one on screen.
-  const open = overview.data?.lessons.find((l) => l.id === openId) ?? proposals.data?.find((l) => l.id === openId);
+  const open = lessons.find(byId) ?? proposals.data?.find(byId);
   const patch = (p: Partial<ScheduleSearch>) => onSearch({ ...search, ...p });
 
   return (

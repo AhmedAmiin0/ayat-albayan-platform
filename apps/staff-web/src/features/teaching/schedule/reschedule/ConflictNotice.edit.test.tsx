@@ -33,7 +33,7 @@ describe('ConflictNotice inside an edit (R-SCH-11)', () => {
     expect(screen.queryByText(t.booking.override)).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: labels.override }));
     expect(onOverride).toHaveBeenCalledWith('طلب ولي الأمر');
-    // A viewport breakpoint would squeeze the field inside a 460px drawer: the grid never goes two-column.
+    // A viewport breakpoint would squeeze the field in a 460px drawer: never two columns.
     expect(container.innerHTML).not.toMatch(/sm:grid-cols/);
   });
 

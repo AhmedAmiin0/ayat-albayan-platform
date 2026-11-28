@@ -14,7 +14,7 @@ const LINK = cn(
 );
 
 /** A real count from the API. `act` = work waiting for the admin (saffron, says what it is). */
-export type NavCount = { text: string; act?: boolean };
+export interface NavCount { text: string; act?: boolean }
 
 export interface AdminNavProps {
   /** Counts only where real data exists; a missing key renders no count. */
@@ -23,7 +23,7 @@ export interface AdminNavProps {
   can?: (permission: Permission) => boolean;
 }
 
-/** The admin nav: section lists with dot leaders and counts (sidebar) or end counts (sheet). */
+/** Admin nav: section lists with dot leaders + counts (sidebar) or end-aligned counts (sheet). */
 export function AdminNav({ counts = {}, can = () => true }: AdminNavProps) {
   return (
     <nav aria-label={t.nav.label} className="flex flex-col gap-3 shell:gap-4">
