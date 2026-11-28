@@ -1,5 +1,5 @@
 import {
-  callsRoutes as routes,
+  callsRoutes,
   type ActiveCallView,
   type StartCallInput,
 } from '@ab/shared';
@@ -33,14 +33,14 @@ const listQuery = (phone: string | null) => (phone ? { phone, limit: 50 } : { li
 export function callSends({ client, requestId }: CallsApiDeps) {
   const call = callWith(client);
   return {
-    startCall: (body: StartCallInput) => call({ route: routes.start, body }),
+    startCall: (body: StartCallInput) => call({ route: callsRoutes.start, body }),
     acceptCall: (id: string, sdp: string) =>
-      call({ route: routes.accept, params: { id }, body: { sdp } }),
-    rejectCall: (id: string) => call({ route: routes.reject, params: { id } }),
-    endCall: (id: string) => call({ route: routes.end, params: { id } }),
+      call({ route: callsRoutes.accept, params: { id }, body: { sdp } }),
+    rejectCall: (id: string) => call({ route: callsRoutes.reject, params: { id } }),
+    endCall: (id: string) => call({ route: callsRoutes.end, params: { id } }),
     requestCallPermission: (phone: string) =>
       call({
-        route: routes.permissionRequest,
+        route: callsRoutes.permissionRequest,
         params: { phone },
         body: { clientRequestId: requestId() },
       }),
@@ -55,7 +55,7 @@ export function callQueries(client: ApiClient) {
   return {
     callConfigQuery: {
       queryKey: [...CALLS_KEY, 'config'],
-      queryFn: () => call({ route: routes.config }),
+      queryFn: () => call({ route: callsRoutes.config }),
       staleTime: 60_000,
       retry: false,
     },
@@ -64,7 +64,7 @@ export function callQueries(client: ApiClient) {
       queryKey: [...CALLS_KEY, 'active'],
       queryFn: async (): Promise<ActivePoll> => {
         const startedAt = Date.now();
-        return { startedAt, rows: await call({ route: routes.active }) };
+        return { startedAt, rows: await call({ route: callsRoutes.active }) };
       },
       enabled: input.enabled,
       refetchInterval: input.enabled && input.polling !== false ? (input.live ? LIVE_POLL_MS : ACTIVE_POLL_MS) : (false as const),
@@ -73,14 +73,14 @@ export function callQueries(client: ApiClient) {
     /** One chat's calls (merged into its messages), or the whole calls log when `phone` is null. */
     callListQuery: (input: { enabled: boolean; phone: string | null }) => ({
       queryKey: [...CALLS_KEY, 'list', input.phone ?? 'all'],
-      queryFn: () => call({ route: routes.list, query: listQuery(input.phone) }),
+      queryFn: () => call({ route: callsRoutes.list, query: listQuery(input.phone) }),
       enabled: input.enabled,
       refetchInterval: input.enabled ? 10_000 : (false as const),
       retry: false,
     }),
     callPermissionQuery: (phone: string) => ({
       queryKey: [...CALLS_KEY, 'permission', phone],
-      queryFn: () => call({ route: routes.permission, params: { phone } }),
+      queryFn: () => call({ route: callsRoutes.permission, params: { phone } }),
       staleTime: 0,
       retry: false,
     }),

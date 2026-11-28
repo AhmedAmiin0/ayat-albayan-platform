@@ -1,4 +1,4 @@
-import { messageHideRoutes as routes } from '@ab/shared';
+import { messageHideRoutes } from '@ab/shared';
 import { callWith, type ApiClient } from '../../../core/http';
 import type { MessageHideCalls } from './message-hide-api.types';
 
@@ -6,7 +6,7 @@ import type { MessageHideCalls } from './message-hide-api.types';
 export function messageHideCalls(client: ApiClient): MessageHideCalls {
   const call = callWith(client);
   return {
-    hide: (params) => call({ route: routes.hide, params }),
-    unhide: (params) => call({ route: routes.unhide, params }),
+    hide: (params) => call({ route: messageHideRoutes.hide, params }),
+    unhide: (params) => call({ route: messageHideRoutes.unhide, params }),
   };
 }

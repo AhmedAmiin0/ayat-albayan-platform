@@ -62,7 +62,7 @@ export {
   templateButtonLabel,
   type TemplateButtonWords,
 } from './template-button';
-export { chatListCalls, type ChatListCalls, type ChatListMember } from './chat-lists';
+export { chatListCalls, type ChatListCalls, type ChatListThread } from './chat-lists';
 export {
   savedReplyCalls,
   type SavedReplyCalls,
