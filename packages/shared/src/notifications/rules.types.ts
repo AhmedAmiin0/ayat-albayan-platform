@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import type { NotificationKey } from './catalogue/catalogue';
 import type { NotificationChannel } from './catalogue/catalogue.types';
 
 // docs/23 §3 phase 4 (amended by docs/26 §6 23-P4): the admin's overrides of the catalogue, one row of
@@ -96,21 +95,6 @@ export const rulePatchSchema = z
   })
   .strict();
 export type RulePatchInput = z.infer<typeof rulePatchSchema>;
-
-/** The row as GET /admin/notifications shows it to tagged clients (X-AB-Client), next to its v1 fields. */
-export interface NotificationRuleView {
-  key: NotificationKey;
-  enabled: boolean;
-  channels: NotificationChannel[];
-  timing: AnyRuleTiming | null;
-  number_id: string | null;
-  /** false: listed only (manual rows) or locked. */
-  editable: boolean;
-  /** Channels the admin may switch off (the row's first channel always stays). */
-  optional_channels: NotificationChannel[];
-  updated_at: string | null;
-  updated_by: string | null;
-}
 
 /** PATCH errors: 422 invalid / locked / unknown_number, 428 confirmation_required, 404 unknown key. */
 export const RULE_ERRORS = [

@@ -13,3 +13,4 @@ export * from './rules.effective';
 export * from './push-wake';
 export * from './push-readers';
 export * from './text-clip';
+export * from './rules';
