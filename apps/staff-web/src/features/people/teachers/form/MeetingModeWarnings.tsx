@@ -34,9 +34,9 @@ function NoteText({ note, livekit }: { note: MeetingModeNote; livekit: boolean |
   return (
     <>
       {text}
-      {/* Without LiveKit the teacher gets no link either (reminders.links.ts): only say so when it is set. */}
+      {/* Without LiveKit the teacher gets no link (reminders.links.ts): say so only when set. */}
       {livekit === true && ` ${T.meetingModeTeacherOnly}`}{' '}
-      {/* A new tab: this sits inside the unsaved teacher form, which a page load would throw away. */}
+      {/* A new tab: this is inside the unsaved teacher form, which a page load would lose. */}
       <a
         href={TEMPLATES_HREF}
         target="_blank"
@@ -58,7 +58,7 @@ export function MeetingModeWarnings({ id, platform, link }: Props) {
   const join = joinStatus(templates.isSuccess ? templates.data : undefined);
   const settled = !templates.isPending && !integrations.isPending;
   const notes = meetingModeNotes({ platform, link, join, livekit, settled });
-  // Never display:none while empty: a live region revealed with its first note is often not announced.
+  // Never display:none while empty: a live region shown with its first note is often not read.
   return (
     <div id={id} role="status" aria-live="polite" className="mt-2 grid gap-2 empty:mt-0">
       {notes.map((note) => (

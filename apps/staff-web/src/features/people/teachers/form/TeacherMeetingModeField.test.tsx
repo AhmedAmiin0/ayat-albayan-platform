@@ -111,7 +111,7 @@ describe('«طريقة حضور الحلقات» in the teacher form (owner 2026
     showMeetingMode(apiFetch, { meeting_mode: 'platform' }, { status: 'pending' });
     const region = notes();
     expect(region.getAttribute('aria-live')).toBe('polite');
-    // Never display:none while empty (a region revealed with its first note is often not announced).
+    // Never display:none while empty (a region revealed with its first note is often not read).
     expect(region.className).not.toContain('empty:hidden');
     expect(
       screen.getByRole('group', { name: T.meetingMode }).getAttribute('aria-describedby'),

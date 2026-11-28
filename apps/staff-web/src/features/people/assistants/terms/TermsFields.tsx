@@ -14,7 +14,7 @@ interface Props {
 
 const T = t.assistants.terms;
 
-/** The salary block, then the commission block (type, value, currency for a fixed one, start day). */
+/** The salary block, then the commission block (type, value, fixed currency, start day). */
 export function TermsFields({ form, errors, set, mins }: Props) {
   const fixed = form.commType === 'fixed';
   return (

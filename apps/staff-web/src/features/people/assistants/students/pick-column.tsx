@@ -6,7 +6,7 @@ import type { StudentListItem } from '@ab/shared';
 
 const col = createColumnHelper<DataTableFeatures, StudentListItem>();
 
-/** A leading checkbox column for the bulk assign; a click on it never opens the profile (the row's click). */
+/** A leading checkbox column for bulk assign; its click never opens the profile. */
 export const pickColumn = (pick: PickColumn) =>
   col.display({
     id: 'pick',

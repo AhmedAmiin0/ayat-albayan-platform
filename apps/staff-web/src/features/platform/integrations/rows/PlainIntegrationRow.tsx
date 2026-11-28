@@ -16,7 +16,7 @@ interface Props {
   onChange: (value: string) => void;
 }
 
-/** Free text is LTR code (ids, URLs): monospace. The select shows Arabic labels: never font-mono. */
+/** Free text is LTR code (ids, URLs): monospace. The select shows Arabic labels: no mono. */
 const fieldClass = 'w-full font-mono text-sm sm:w-[300px]';
 const selectClass = 'w-full text-sm sm:w-[300px]';
 

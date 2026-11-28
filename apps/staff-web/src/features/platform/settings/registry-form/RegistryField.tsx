@@ -14,7 +14,7 @@ import type { SettingsFormState } from './use-settings-form';
 
 type ControlProps = Parameters<SettingRowProps['children']>[0];
 
-/** A select of fixed codes; a stored code outside the list stays selectable, so saving never changes it. */
+/** A select of fixed codes; a stored code outside the list stays selectable, so a save keeps it. */
 function CodeSelect(p: { control: ControlProps; value: string; options: readonly string[]; onValue: (v: string) => void }) {
   return (
     <Select {...p.control} className="w-[140px]" value={p.value} onChange={(e) => p.onValue(e.target.value)}>

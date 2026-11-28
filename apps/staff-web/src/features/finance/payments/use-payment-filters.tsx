@@ -14,7 +14,7 @@ export interface PaymentFiltersOptions {
   onChange: (patch: Partial<PaymentsUrlSearch>) => void;
 }
 
-/** Student, date range and kind (all in the URL) as the table toolbar's extra filters, with their chips. */
+/** Student, date range and kind (all in the URL) as the toolbar's extra filters, with chips. */
 export function usePaymentFilters({
   value,
   studentName,

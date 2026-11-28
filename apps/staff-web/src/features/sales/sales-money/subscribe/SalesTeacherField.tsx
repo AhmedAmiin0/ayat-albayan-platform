@@ -33,7 +33,7 @@ export function SalesTeacherField({ value, onChange }: Props) {
     <Field label={t.salesMoney.teacher} hint={t.salesMoney.teacherHint}>
       {(p) => (
         <Select {...p} value={value} onChange={(e) => onChange(e.target.value)}>
-          {/* «none» only while nothing is set: leaving it never removes a teacher (no teacherId is sent). */}
+          {/* «none» only while unset: leaving it never removes a teacher (no teacherId sent). */}
           {value === '' && <option value="">{t.salesMoney.teacherNone}</option>}
           {teachers.map((x) => (
             <option key={x.id} value={x.id}>

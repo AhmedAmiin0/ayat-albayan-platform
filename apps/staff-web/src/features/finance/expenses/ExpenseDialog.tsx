@@ -13,7 +13,7 @@ import { ExpenseFields } from './ExpenseFields';
 
 interface Props { month: string; expense: ExpenseView | null; onClose: () => void; onSaved: () => void }
 
-/** Add or edit an expense (R-RPT-02): category, amount, currency, paid day, vendor, method, receipt, note, repeat. */
+/** Add or edit an expense (R-RPT-02). */
 export function ExpenseDialog({ month, expense, onClose, onSaved }: Props) {
   const queryClient = useQueryClient();
   const formId = useId();

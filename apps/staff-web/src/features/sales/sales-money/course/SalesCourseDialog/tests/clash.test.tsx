@@ -31,7 +31,7 @@ const nextButton = () => screen.getByRole('button', { name: t.booking.next });
 const submit = () => screen.getByRole('button', { name: t.booking.submit });
 const CLASH = { kind: 'teacher_busy', startsAt: SLOT, endsAt: SLOT };
 
-/** Open the dialog, wait for the preselected teacher, then pick Sunday 17:00 and Wednesday 19:30. */
+/** Open the dialog, wait for the preselected teacher, pick Sunday 17:00 and Wednesday 19:30. */
 async function pickBothDays(): Promise<void> {
   renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
   const abrar = await screen.findByRole('radio', { name: new RegExp(ABRAR.display_name_ar) });

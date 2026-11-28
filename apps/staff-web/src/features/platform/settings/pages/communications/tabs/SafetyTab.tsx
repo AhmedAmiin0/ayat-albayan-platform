@@ -32,7 +32,7 @@ export function SafetyTab({
           intro={t.communicationsHub.safetyIntro}
         />
       </div>
-      {/* Each section heading names its driver already: the group heading stays for screen readers only. */}
+      {/* Each section heading names its driver: the group heading is for screen readers only. */}
       <div className="grid min-w-0 gap-6 [&_[role=group]>h3]:sr-only">
         <IntegrationsPanel
           query=""

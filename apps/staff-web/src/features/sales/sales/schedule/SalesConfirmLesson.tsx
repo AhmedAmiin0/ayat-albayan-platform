@@ -4,7 +4,7 @@ import { Button, FormAlert, apiSend, t } from '@ab/web-kit';
 import { errorCode, lessonErrorText } from '@/features/teaching/schedule';
 import { salesKeys } from '@/features/sales/keys';
 
-/** The confirm's own wording for lesson_ended and invalid_transition; the lessons wording otherwise. */
+/** The confirm's wording for lesson_ended and invalid_transition; the lessons wording otherwise. */
 export function confirmErrorText(error: unknown): string {
   const code = errorCode(error);
   if (code === 'lesson_ended') return t.sales.lessonActions.confirmEnded;
@@ -30,7 +30,7 @@ export function SalesConfirmLesson({
   const confirm = useMutation({
     mutationFn: () => apiSend<SalesLessonMoved>('POST', `/sales/lessons/${lessonId}/confirm`),
     onSuccess: onConfirmed,
-    // A 409 (cancelled or confirmed elsewhere) re-reads the day too, so the stale button and status go.
+    // A 409 (cancelled or confirmed elsewhere) re-reads the day too, so the stale button goes.
     onSettled: () => client.invalidateQueries({ queryKey: salesKeys.schedule }),
   });
   return (

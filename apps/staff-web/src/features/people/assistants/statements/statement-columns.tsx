@@ -16,7 +16,7 @@ interface Handlers {
   onAction: (s: AssistantStatementView, action: StatementAction) => void;
 }
 
-/** Statements of a month: assistant, per-currency totals, status (draft → approved → paid), actions. */
+/** A month's statements: assistant, totals per currency, status (draft → approved → paid). */
 export function statementColumns({ can, onAction }: Handlers) {
   return col.columns([
     col.accessor((s) => s.assistant.name, {

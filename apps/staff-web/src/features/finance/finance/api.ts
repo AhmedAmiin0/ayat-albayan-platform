@@ -26,7 +26,7 @@ interface InvoicesList {
   filters?: FilterSearch;
 }
 
-/** GET /invoices/recent?from&to&kind&student&sort&dir&page: booking invoices (newest first unless sorted), with their payment. */
+/** GET /invoices/recent: booking invoices with their payment, newest first unless sorted. */
 export const invoicesQuery = (q: InvoicesList) =>
   queryOptions({
     queryKey: moneyKeys.invoices(q),

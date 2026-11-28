@@ -17,7 +17,7 @@ function Harness({ start, teacher }: { start: Partial<TeacherForm>; teacher: Tea
 }
 
 export interface ShowOptions {
-  /** settings.meeting_link_auto; 'pending' = GET /settings/public never answers, 'error' = it fails. */
+  /** settings.meeting_link_auto; 'pending' = GET /settings/public never answers, 'error' fails. */
   auto?: boolean | 'pending' | 'error';
   /** lesson_join_link's row status; null = the list has no such row; 'error' = the list fails. */
   status?: TemplateStatus | null | 'error';

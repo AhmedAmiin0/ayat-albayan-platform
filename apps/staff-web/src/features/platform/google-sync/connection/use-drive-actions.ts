@@ -13,7 +13,7 @@ export function useDriveActions(onNote: (message: string) => void) {
   const queryClient = useQueryClient();
   const onStatus = async (next: GoogleStatusView) => {
     queryClient.setQueryData(googleStatusQuery.queryKey, next);
-    // Discovery feeds both suggestion lists: teachers (calendars) and students (summary sheet links).
+    // Discovery feeds both suggestion lists: teachers (calendars) and students (summary sheets).
     await Promise.all(
       [googleKeys.teachers(), googleKeys.students()].map((queryKey) =>
         queryClient.invalidateQueries({ queryKey }),

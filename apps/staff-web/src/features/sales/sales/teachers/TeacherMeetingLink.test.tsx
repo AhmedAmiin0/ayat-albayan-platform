@@ -12,8 +12,8 @@ const LINK = 'https://meet.example.org/abrar-fixed';
 const L = t.studentLists;
 
 /**
- * `platform`: SalesTeacherView.platform_classroom (the teacher's mode); `auto`: settings.meeting_link_auto
- * as GET /settings/public answered it, which the section ignores.
+ * `platform`: SalesTeacherView.platform_classroom (the teacher's mode); `auto`:
+ * settings.meeting_link_auto as GET /settings/public answered it, which the section ignores.
  */
 function show(link: string | null, { platform = false, auto = false } = {}) {
   const client = new QueryClient({

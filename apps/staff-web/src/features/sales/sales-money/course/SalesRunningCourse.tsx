@@ -8,7 +8,7 @@ import { SalesCourseActions } from './SalesCourseActions';
 export interface SalesRunningCourseProps {
   view: SalesCourseView;
   current: BookedCourse;
-  /** What the dialog shows besides the change (the renewal's choice, the wizard, a refusal); absent = only the change. */
+  /** What shows besides the change (renewal choice, wizard, refusal); absent = only the change. */
   children?: ReactNode;
 }
 

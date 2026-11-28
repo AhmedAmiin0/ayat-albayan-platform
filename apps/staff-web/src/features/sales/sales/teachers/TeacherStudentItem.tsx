@@ -3,7 +3,7 @@ import { studentStatusStyle } from '@ab/money';
 import { Ltr, StatusChip, useClock, t, useViewerTz } from '@ab/web-kit';
 import { viewerWhen } from './teacher-view';
 
-/** One student of the teacher: name, code (LTR island), program, status (trial included), next lesson. */
+/** One student of the teacher: name, code (LTR), program, status (trial included), next lesson. */
 export function TeacherStudentItem({ student }: { student: SalesTeacherStudent }) {
   const { cycle } = useClock();
   const tz = useViewerTz();

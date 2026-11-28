@@ -10,7 +10,7 @@ export type ReceiptChoice =
   | { kind: 'chat'; messageId: string; subscriptionId: string; path: string; label: string }
   | { kind: 'file'; file: File };
 
-/** The attachments that count for the package being paid: a chat copy made for another package does not. */
+/** The attachments that count for this package: a chat copy made for another one does not. */
 export function attachmentsFor(
   list: readonly ReceiptChoice[],
   subscriptionId: string,
@@ -18,7 +18,7 @@ export function attachmentsFor(
   return list.filter((c) => c.kind === 'file' || c.subscriptionId === subscriptionId);
 }
 
-/** A chat file added once per message (each pick is a new copy, so never by path); none past the maximum. */
+/** A chat file added once per message (each pick is a new copy); none past the maximum. */
 export function addChatChoice(
   list: readonly ReceiptChoice[],
   choice: ReceiptChoice & { kind: 'chat' },
@@ -33,7 +33,7 @@ export function addChatChoice(
   return { list: [...list, choice], problem: null };
 }
 
-/** The chat messages already picked for this package: picking one again would only make another copy. */
+/** Chat messages already picked for this package: picking one again only makes another copy. */
 export function pickedMessages(
   list: readonly ReceiptChoice[],
   subscriptionId: string,

@@ -39,7 +39,7 @@ export function StudentsPage({
     studentListQuery(search, page, { filters, sort, columns: colFilters }),
   );
   const counts = useQuery(studentStatusCountsQuery({ ...filters, status: undefined }));
-  // The counts know the R-STU-01 filters only: under a search or a column filter they would not match the list.
+  // The counts know only the R-STU-01 filters: under a search or column filter they mismatch.
   const narrowed = Boolean(search) || Object.values(colFilters ?? {}).some(Boolean);
   const [adding, setAdding] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);

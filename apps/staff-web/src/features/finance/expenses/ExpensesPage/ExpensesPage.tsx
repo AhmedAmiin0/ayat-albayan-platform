@@ -27,7 +27,7 @@ import { TableBox } from '@/components/data-table/TableBox';
 
 interface Props { month: string; onMonth: (month: string) => void }
 
-/** /admin/expenses (R-RPT-02, E4): a month's expenses (drafts to confirm; every column sorts/filters), or the 12-month table; CSV. */
+/** /admin/expenses (R-RPT-02, E4): a month's expenses (drafts to confirm) or the 12-month table. */
 export function ExpensesPage({ month, onMonth }: Props) {
   const queryClient = useQueryClient();
   const list = useQuery(expensesQuery(month));

@@ -23,7 +23,7 @@ export interface ValuesBodyProps {
   custom: CustomValues;
 }
 
-/** The page: head, search and filters, the group list (side list ≥ shell, chips below) and one table. */
+/** Head, search and filters, the group list (side list ≥ shell, chips below) and one table. */
 export function ValuesBody({
   search,
   onSearch,

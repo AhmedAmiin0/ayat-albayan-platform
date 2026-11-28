@@ -26,7 +26,7 @@ export function progressOf(
   });
 }
 
-/** The student's line across every live package (FIFO; a cancelled one never counts): remaining = StudentBalanceView.remaining. */
+/** The student's line across live packages (FIFO, cancelled never counts) = balance remaining. */
 export function studentProgress(view: Pick<StudentBalanceView, 'packages'>): PackageProgress {
   const sum = (pick: (b: BalanceView) => number) =>
     livePackages(view.packages).reduce((n, p) => n + pick(p.balance), 0);

@@ -27,7 +27,7 @@ interface Props {
   onMonth: (month: string) => void;
 }
 
-/** /admin/payouts (R-PAY-02, R-TCH-04, E3): what every teacher is owed, then a month's drafts, approve, pay, correct, CSV. */
+/** /admin/payouts (R-PAY-02, R-TCH-04, E3): what each teacher is owed, then a month's drafts. */
 export function PayoutsPage({ month, onMonth }: Props) {
   const queryClient = useQueryClient();
   const list = useQuery(payoutsQuery(month));

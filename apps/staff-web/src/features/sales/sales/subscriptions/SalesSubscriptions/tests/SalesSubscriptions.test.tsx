@@ -23,7 +23,7 @@ const CONFIRMED = [
   sub({ id: 'p2', student: { id: 's2', code: 'AB-0190', name: 'يوسف' }, status: 'active' }),
 ];
 
-/** The route's `kind` as local state, so the tabs swap the list as they do on /sales/subscriptions. */
+/** The route's `kind` as local state, so the tabs swap the list as on /sales/subscriptions. */
 function Harness() {
   const [kind, setKind] = useState<SalesSubscriptionKind>('pending');
   return <SalesSubscriptions kind={kind} onKind={setKind} />;

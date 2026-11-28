@@ -11,7 +11,7 @@ import { categoriesQuery, categoryLabel, expenseYearQuery } from './api';
 type Month = ExpenseYearView['months'][number];
 const col = createColumnHelper<DataTableFeatures, Month>();
 
-/** Month, one column per category, the month's total: every column sorts (e.g. the dearest month first). */
+/** Month, one column per category, the month's total: every column sorts. */
 function yearColumns(input: {
   categories: string[];
   label: (key: string) => string;

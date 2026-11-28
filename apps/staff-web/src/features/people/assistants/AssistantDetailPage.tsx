@@ -8,7 +8,7 @@ import { TermsEditor } from './terms/TermsEditor';
 import { commissionText, salaryText } from './terms/terms-summary';
 import { useStatementCan } from './statements/use-statement-can';
 
-/** /admin/assistants/:assistantId: this assistant's terms, then their commissions and monthly statements. */
+/** /admin/assistants/:assistantId: the terms, then the commissions and monthly statements. */
 export function AssistantDetailPage({ assistantId }: { assistantId: string }) {
   const list = useQuery(assistantsQuery);
   const can = useStatementCan();

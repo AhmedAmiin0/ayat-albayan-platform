@@ -41,7 +41,7 @@ export const BOOKED = {
   invoice_id: null,
 };
 
-/** apiFetch for the course dialog: the view, her teachers (ABRAR) and two free slots (Sun 17:00, Wed 19:30). */
+/** apiFetch for the course dialog: the view, her teachers (ABRAR), slots Sun 17:00, Wed 19:30. */
 export function routeCourse(apiFetch: Mock, view: SalesCourseView = COURSE_VIEW): void {
   const routes: [string, unknown][] = [
     ['/sales/booking/course', view],
@@ -96,7 +96,7 @@ export const NEXT_SUN = '2026-10-11T14:00:00.000Z'; // Sunday 17:00 Riyadh
 export const NEXT_SUN_LATER = '2026-10-11T15:00:00.000Z'; // Sunday 18:00
 export const NEXT_WED = '2026-10-14T16:30:00.000Z'; // Wednesday 19:30
 
-/** apiFetch for a renewal: the view, her teachers (ABRAR by default), and the week of 10 October's free slots. */
+/** apiFetch for a renewal: the view, her teachers (ABRAR default), 10 October's week of slots. */
 export function routeRenewal(
   apiFetch: Mock,
   view: SalesCourseView = RENEWAL_VIEW,

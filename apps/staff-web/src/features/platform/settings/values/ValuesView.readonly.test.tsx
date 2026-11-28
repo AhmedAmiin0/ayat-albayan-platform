@@ -40,7 +40,7 @@ describe('«القيم» — read-only and module-owned rows', () => {
     const table = screen.getByRole('table');
     expect(within(table).queryByRole('spinbutton')).toBeNull();
     expect(within(table).queryByRole('switch')).toBeNull();
-    // The one kind of button left: the description line, which opens the text to read (states.html).
+    // The one button left: the description line, which opens the text to read (states.html).
     const buttons = within(table).queryAllByRole('button');
     expect(buttons.length).toBeGreaterThan(0);
     expect(buttons.every((b) => b.getAttribute('aria-haspopup') === 'dialog')).toBe(true);

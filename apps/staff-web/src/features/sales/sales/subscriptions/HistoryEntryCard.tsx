@@ -9,7 +9,7 @@ const status = (s: string | null): string => (s ? (STATUS[s] ?? s) : '—');
 const fill = (text: string, values: Record<string, string>): string =>
   Object.entries(values).reduce((out, [k, v]) => out.replace(`{${k}}`, v), text);
 
-/** One subscription in the history: package, status, dates, lessons, status changes and payments (date, kind, amount). */
+/** One subscription: package, status, dates, lessons, status changes and payments. */
 interface HistoryEntryCardProps {
   entry: SalesHistoryEntry;
   current: boolean;

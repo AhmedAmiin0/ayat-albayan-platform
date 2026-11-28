@@ -1,7 +1,7 @@
 import { useId } from 'react';
 import { Input, Label, t } from '@ab/web-kit';
 
-/** The OAuth redirect URI, read-only: one tap selects it all so the owner can copy it into Google Cloud. */
+/** The OAuth redirect URI, read-only: one tap selects it all to copy into Google Cloud. */
 export function RedirectUri({ uri }: { uri: string }) {
   const id = useId();
   return (

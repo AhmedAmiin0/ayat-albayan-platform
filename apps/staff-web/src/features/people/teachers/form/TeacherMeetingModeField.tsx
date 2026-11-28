@@ -16,7 +16,7 @@ import type { Teacher } from '@ab/shared';
 interface Props {
   form: TeacherForm;
   set: SetField;
-  /** The teacher being edited (null when adding): their resolved mode stands in until the settings load. */
+  /** The teacher edited (null when adding): their resolved mode stands in until settings load. */
   teacher?: Teacher | null;
 }
 

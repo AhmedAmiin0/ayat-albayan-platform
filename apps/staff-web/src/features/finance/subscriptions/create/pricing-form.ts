@@ -45,7 +45,7 @@ export function pricingBody(f: PricingForm): SubscriptionPricing {
     : { ...common, tier: f.pkg };
 }
 
-/** The package's lessons from the calculator inputs (no quote needed): the tier's, or the custom count. */
+/** The package's lessons from the calculator inputs (no quote): the tier's or the custom count. */
 export function pricingLessons(p: SubscriptionPricing): number {
   return 'count' in p ? p.count : lessonsOf(p.tier);
 }

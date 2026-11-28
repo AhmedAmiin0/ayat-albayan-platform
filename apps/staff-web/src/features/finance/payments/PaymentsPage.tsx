@@ -38,7 +38,7 @@ function csvRange(f: PaymentFilters): { from: string; to: string } {
   return { from: f.from ?? `${to.slice(0, 4)}-01-01`, to };
 }
 
-/** /admin/payments (R-PAY-01): filters and sort (URL), the period total, CSV, record / edit / delete, receipts. */
+/** /admin/payments (R-PAY-01): filters, sort, period total, CSV, record, edit, delete. */
 export function PaymentsPage({ search, onSearch }: Props) {
   const page = search.page ?? 1;
   const { filters, sort } = paymentsView(search);

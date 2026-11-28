@@ -13,7 +13,7 @@ vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({
   apiSend,
 }));
 
-// docs/19: each line's driver is a select (meta | kapso | crm), never free text; the Kapso and CRM keys have a group.
+// docs/19: each line's driver is a select (meta | kapso | crm); Kapso and CRM keys have a group.
 
 const s = t.integrations;
 const ready = () => screen.findByRole('button', { name: s.saveValues });

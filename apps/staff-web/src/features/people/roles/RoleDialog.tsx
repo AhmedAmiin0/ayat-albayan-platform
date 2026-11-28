@@ -22,7 +22,7 @@ interface Props {
 }
 const P = t.permissions.page;
 
-/** Create or edit a role in the side panel: names, base role (fixed once created) and the matrix. */
+/** Create or edit a role in the side panel: names, base role (fixed once created), the matrix. */
 export function RoleDialog({ role, onClose }: Props) {
   const queryClient = useQueryClient();
   const formId = useId();

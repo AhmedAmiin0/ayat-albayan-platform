@@ -8,7 +8,7 @@ import { useValues } from '@/features/platform/settings/values/values-context';
 import { denseClass, describedBy, type EditorProps } from './editor-props';
 import { ValueSwitch } from './ValueSwitch';
 
-// The browser's up/down arrows sit over the digits of a narrow box: hidden (the keyboard still steps).
+// The browser's arrows cover the digits of a narrow box: hidden (the keyboard still steps).
 const NO_SPIN =
   '[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none';
 

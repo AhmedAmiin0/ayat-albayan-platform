@@ -2,7 +2,7 @@ import type { IntegrationConfigItem } from '@ab/catalog';
 import { t, useClock } from '@ab/web-kit';
 import { formatDateTime } from '@/features/sales/leads';
 
-/** Under a plain field's hint: where the value in use comes from (settings, the server, nowhere). */
+/** Under a plain field's hint: where the value in use comes from (settings, server, nowhere). */
 export function IntegrationSourceNote({ item }: { item: IntegrationConfigItem }) {
   const clock = useClock();
   const words = t.integrations.source[item.source];

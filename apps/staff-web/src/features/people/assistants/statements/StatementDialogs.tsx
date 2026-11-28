@@ -16,7 +16,7 @@ export interface StatementDialog {
   kind: 'details' | 'pay' | 'reopen' | 'unpay';
 }
 
-/** The dialog behind a statement row action: details, pay (receipt), reopen, un-pay (with a reason). */
+/** The dialog behind a statement action: details, pay (receipt), reopen, un-pay (with reason). */
 export function StatementDialogs({
   open,
   onClose,

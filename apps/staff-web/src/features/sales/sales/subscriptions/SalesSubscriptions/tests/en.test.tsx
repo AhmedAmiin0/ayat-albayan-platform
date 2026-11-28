@@ -14,7 +14,7 @@ vi.mock('@ab/web-kit/lib/i18n/locale', async (orig) => ({
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@ab/web-kit/lib/http/api/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
-/** The route's `kind` as local state, so the tabs swap the list as they do on /sales/subscriptions. */
+/** The route's `kind` as local state, so the tabs swap the list as on /sales/subscriptions. */
 function Harness() {
   const [kind, setKind] = useState<SalesSubscriptionKind>('pending');
   return <SalesSubscriptions kind={kind} onKind={setKind} />;

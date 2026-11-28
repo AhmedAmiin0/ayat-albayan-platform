@@ -23,7 +23,7 @@ export function StaffPhotoControl(props: StaffPhotoControlProps) {
   return allowed ? <PhotoButtons {...props} /> : null;
 }
 
-/** Focus back on the picker once the confirm closes and the picker is enabled again (never on the first render). */
+/** Focus back on the picker once the confirm closes and it is enabled (never on first render). */
 function useReturnFocus(confirming: boolean, busy: boolean) {
   const picker = useRef<HTMLInputElement>(null);
   const owed = useRef(false);

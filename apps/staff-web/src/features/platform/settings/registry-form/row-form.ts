@@ -57,7 +57,7 @@ function shapeValue(key: SettingKey, form: SettingsForm): Record<string, string>
   return def.nullable && Object.keys(out).length === 0 ? null : out;
 }
 
-/** The fields → the value PATCH /settings takes (a phone typed locally becomes E.164 when it can). */
+/** Fields → the PATCH /settings value (a phone typed locally becomes E.164 when it can). */
 export function rowValue(key: SettingKey, form: SettingsForm): unknown {
   const def = settingDef(key);
   const field = SETTING_FIELD_OF[key];

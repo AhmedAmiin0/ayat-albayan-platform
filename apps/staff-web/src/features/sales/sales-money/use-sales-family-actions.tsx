@@ -102,7 +102,7 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
   const due = students.filter((s) => s.renew_due);
   const single = due.length === 1 ? due[0] : undefined;
   const renew = () => setOpened({ start: 'subscribe', renew: true, ...(single ? { studentId: single.id } : {}) });
-  // One entry per action: the only child opens it straight away, several are picked in ChildChoiceDialog.
+  // One entry per action: an only child opens it at once; several are picked in ChildChoiceDialog.
   const entry = (kind: Choice) => {
     const { title, list, open } = choices[kind];
     const [only] = list;

@@ -1,7 +1,7 @@
 import { userChecks } from '@ab/client-core';
 import { t } from '@ab/web-kit';
 
-// The create / edit checks live in @ab/client-core (docs/27 E3), shared with the mobile app; this module injects `t`.
+// The create / edit checks live in @ab/client-core (docs/27 E3), shared with mobile; `t` goes in.
 export const { emailError, nameError, phoneError, passwordError, createErrors, editErrors } =
   userChecks(() => ({
     validation: t.users.validation,

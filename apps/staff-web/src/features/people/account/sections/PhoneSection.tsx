@@ -10,7 +10,7 @@ import { useAccountSave } from '@/features/people/account/use-account-save';
 
 const P = t.account.phone;
 
-/** R-ACC-02: the user's own number (E.164; blank removes it), confirmed with the current password. */
+/** R-ACC-02: the user's own number (E.164; blank removes it), confirmed with the password. */
 export function PhoneSection({ profile, onDone }: SectionProps) {
   const saved = profile.phone_e164 ?? '';
   const [phone, setPhone] = useState(saved);

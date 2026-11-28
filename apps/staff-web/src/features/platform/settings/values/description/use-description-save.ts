@@ -10,9 +10,9 @@ import { textIn } from './description';
 export const TRANSLATIONS_QUERY_PREFIX = ['translations'] as const;
 
 /**
- * The API writes the description and the ar override of its hint key in one go (docs/26 §3); `t` got
- * the overrides at boot, so the same text is put into it here and every other place that shows the
- * hint (search, confirmations) reads the new text without a reload. A restore puts the bundled text back.
+ * The API writes the description and the ar override of its hint key in one go (docs/26 §3); `t`
+ * got the overrides at boot, so the text is put into it here and every place showing the hint
+ * (search, confirmations) reads it without a reload. A restore puts the bundled text back.
  */
 function mirrorOverride(hintKey: string | null | undefined, text: string | null): void {
   if (locale !== 'ar' || !hintKey) return;

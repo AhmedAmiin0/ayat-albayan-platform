@@ -16,7 +16,7 @@ import type { FilterSearch, SortSearch } from '@/lib/list/list-search';
 import { teacherStudentColumns } from '@/features/people/teachers/detail/teacher-student-columns';
 import { panelView } from '@/features/people/teachers/detail/teacher-students-view';
 
-/** The default view: her current students, not subscribed yet, subscribed and package ended (lessons keep running). */
+/** Default view: current students, not yet subscribed, subscribed, package ended (lessons run). */
 export const CURRENT: readonly StudentStatus[] = CURRENT_STUDENT_STATUSES;
 
 /** In enum order. */

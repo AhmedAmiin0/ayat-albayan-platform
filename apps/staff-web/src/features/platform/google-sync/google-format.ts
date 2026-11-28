@@ -46,7 +46,7 @@ export const stateStyle: Record<GoogleSyncState, ChipStyle> = {
   skipped: { tone: 'neutral', glyph: 'hollow' },
 };
 
-/** The states an admin can send back to the queue (never `gone`: deleted in Google stays deleted, docs/24 §2.4). */
+/** States an admin can requeue; never `gone`: deleted in Google stays deleted (docs/24 §2.4). */
 export const RETRYABLE: ReadonlySet<GoogleSyncState> = new Set(['failed', 'skipped']);
 
 /** Why an item was skipped, in words (the import guard has its own web string). */

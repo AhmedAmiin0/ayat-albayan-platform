@@ -91,7 +91,7 @@ export function PayDialog({ teacher, selected, outstanding, onClose, onSaved }: 
   );
 }
 
-/** No answer at all (fetch's TypeError) may still have been recorded: a retry is safe. A storage failure is the upload. */
+/** No answer (fetch's TypeError) may still be recorded: a retry is safe. Storage = the upload. */
 function payErrorText(e: unknown): string {
   if (e instanceof TypeError) return t.payments.mobile.offline;
   const text = apiErrorText(e, t.earnings.error);

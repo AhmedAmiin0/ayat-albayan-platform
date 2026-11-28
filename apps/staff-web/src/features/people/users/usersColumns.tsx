@@ -59,7 +59,7 @@ const NameCell = memo(function NameCell({
   );
 });
 
-/** The users table. The name is a button (keyboard path to the panel); a click on the row opens it too. */
+/** The name is a button (keyboard path to the panel); a click on the row opens it too. */
 export function usersColumns(onOpen: (userId: string) => void) {
   return col.columns([
     col.accessor('full_name', {

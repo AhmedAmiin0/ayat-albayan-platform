@@ -10,7 +10,7 @@ export interface InvoiceRangeOptions {
   onChange: (patch: Record<string, unknown>) => void;
 }
 
-/** The created-day range of /admin/invoices as the table toolbar's extra filters, with their chips. */
+/** The created-day range of /admin/invoices as the toolbar's extra filters, with chips. */
 export function invoiceRangeFilters({ search, onChange }: InvoiceRangeOptions): ExtraFilters {
   return {
     fields: (

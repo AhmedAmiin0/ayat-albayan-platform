@@ -16,8 +16,8 @@ import { pathKey, salesCourseCalls } from '@ab/client-core';
 import { myMoneyKeys, salesMoneyKeys, salesSubscriptionKeys } from '@/features/sales/keys';
 
 // The salesperson's money writes from the chat (R-ASST-01/04, docs/16): /sales/money/*,
-// /sales/subscriptions and /sales/payments. Only her students; the price always from the API. `Bind`: the chat's
-// phone for a child not hers (chatBinding, sales.renew_any, docs/16 row 38); nothing for hers.
+// /sales/subscriptions and /sales/payments. Only her students; the price always from the API.
+// `Bind`: the chat's phone for a child not hers (chatBinding, sales.renew_any, docs/16 row 38).
 
 export interface Bind {
   phone?: string;
@@ -28,7 +28,7 @@ const scopeQuery = (studentId: string, bind: Bind) =>
 /** Every sales money read lives under it (family, chat receipts, quotes). */
 export const SALES_MONEY_KEY = salesMoneyKeys.all;
 
-/** GET /sales/money/family: her students in this chat's family, each with its packages still owed. */
+/** GET /sales/money/family: her students in this chat's family, each with packages still owed. */
 export const salesFamilyQuery = (phone: string) =>
   queryOptions({
     queryKey: salesMoneyKeys.family(phone),

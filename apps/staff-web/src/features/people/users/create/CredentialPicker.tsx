@@ -13,7 +13,7 @@ export interface CredentialPickerProps {
   error?: string | undefined;
 }
 
-/** How the user gets a password: typed here, generated (shown once) or an invite link (shown once). */
+/** The password: typed here, generated (shown once) or an invite link (shown once). */
 export function CredentialPicker({
   name,
   mode,

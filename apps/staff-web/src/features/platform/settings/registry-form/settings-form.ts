@@ -81,7 +81,7 @@ const phone = (v: string): string => {
   return r.ok ? r.e164 : v;
 };
 
-/** A json setting's object: the filled boxes only; null (unset) when the setting may be and none is filled. */
+/** A json setting's object: filled boxes only; null when it may be unset and none is filled. */
 function shapeValue(
   def: JsonDef,
   input: { form: SettingsForm; field: string },

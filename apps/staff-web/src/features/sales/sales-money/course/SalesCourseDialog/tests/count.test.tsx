@@ -33,7 +33,7 @@ vi.mock('@tanstack/react-router', async () => ({
 const nextButton = () => screen.getByRole('button', { name: t.booking.next });
 const submit = () => screen.getByRole('button', { name: t.booking.submit });
 
-/** Open the dialog, wait for the preselected teacher, then on to the slot step (its Sunday 17:00 picked). */
+/** Open the dialog, wait for the preselected teacher, go to the slots (Sunday 17:00 picked). */
 async function toSlotStep(): Promise<void> {
   renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
   const abrar = await screen.findByRole('radio', { name: new RegExp(ABRAR.display_name_ar) });

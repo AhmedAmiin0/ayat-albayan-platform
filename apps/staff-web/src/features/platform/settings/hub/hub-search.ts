@@ -76,7 +76,7 @@ const MODULES: readonly ModuleEntry[] = [
   { id: 'appearance', label: t.settings.theme, where: t.settings.sections.appearance, href: HUB_PATHS.appearance, matches: appearanceMatch },
 ];
 
-/** Every hit for the search, settings first (registry order), then module pages; none for an empty search. */
+/** Every hit, settings first (registry order), then module pages; none for an empty search. */
 export function searchHub(query: string): HubHit[] {
   if (query.trim() === '') return [];
   const settings = SETTING_KEYS.filter((k) => matchesSetting(k, query)).map((k) =>

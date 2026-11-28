@@ -31,7 +31,7 @@ export interface SettingsFormState {
   reset: (key: SettingKey) => void;
   errors: SettingsErrors;
   set: (patch: SettingsForm) => void;
-  /** Validates the changed fields, then one PATCH /settings with them only; errors stay on their fields. */
+  /** Validates the changed fields, then one PATCH /settings with them; errors stay on fields. */
   submit: () => void;
   /** The page's keys changed and not saved yet (for the leave guard). */
   changed: SettingKey[];

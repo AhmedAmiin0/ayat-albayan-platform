@@ -67,7 +67,7 @@ export type RoleBody =
   | { ok: true; body: RoleCreate | RoleUpdate }
   | { ok: false; error: 'name_required' };
 
-/** POST body for a new role; PATCH body (names + grants, never the base role) for an existing one. */
+/** POST body for a new role; PATCH body (names + grants, never the base role) for an old one. */
 export function roleBody(
   form: RoleForm,
   input: { creating: boolean; fixedGrants: boolean },
@@ -93,7 +93,7 @@ export function resettableRole(role: RoleView | null): RoleView | null {
   return role?.is_system === true && isEditableSystemRole(role.key) ? role : null;
 }
 
-/** A system admin / guardian / student role: its grants are fixed, the dialog sends the names only. */
+/** A system admin / guardian / student role: fixed grants, so the dialog sends names only. */
 export function fixedGrantsOf(role: RoleView | null): 'admin' | 'portal' | null {
   if (role?.is_system !== true) return null;
   if (role.key === 'admin') return 'admin';

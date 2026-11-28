@@ -21,7 +21,7 @@ export function CrmCutoverCard({ settings }: { settings: AcademySettings }) {
       <h2 id="crm-cutover-title" className="text-h4 font-bold">
         {h.crmTitle}
       </h2>
-      {/* The chip changes after a save: said politely (no role=status, the page's toast has it). */}
+      {/* The chip changes after a save: polite, no role=status (the page's toast has it). */}
       <div aria-live="polite" data-testid="crm-state">
         <StatusChip
           tone={done ? 'ok' : 'act'}

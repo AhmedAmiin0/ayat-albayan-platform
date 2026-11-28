@@ -1,4 +1,4 @@
-// Test fixtures for the teacher-earnings screens (test-only). BALANCE and PAYMENT live in @ab/shared/testing (shared).
+// Test fixtures for the teacher-earnings screens. BALANCE and PAYMENT live in @ab/shared/testing.
 import type { TeacherEarningView } from '@ab/money';
 
 export { BALANCE, PAYMENT } from '@ab/shared/testing';

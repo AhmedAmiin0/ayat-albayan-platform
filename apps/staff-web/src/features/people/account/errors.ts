@@ -37,7 +37,7 @@ const PHONE_REASONS = new Set(['empty', 'not_a_number', 'invalid_length', 'missi
 
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
 
-/** The message of one code (a phone reason reads as invalid_phone); the generic one when unknown. */
+/** One code's message (a phone reason reads as invalid_phone); the generic one when unknown. */
 export function accountMessage(code: string): string {
   return MESSAGES[PHONE_REASONS.has(code) ? 'invalid_phone' : code] ?? t.account.errors.generic;
 }

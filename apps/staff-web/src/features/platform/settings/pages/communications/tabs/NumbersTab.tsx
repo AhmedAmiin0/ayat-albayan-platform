@@ -11,7 +11,7 @@ export function NumbersTab({ onNote }: { onNote: (message: string) => void }) {
   return (
     <div className="grid gap-6">
       <NumbersPanel query="" onSaved={onNote} />
-      {/* The lines check and the folded old rows side by side on a wide screen (closed by default). */}
+      {/* The lines check and the folded old rows side by side on a wide screen. */}
       <div className="grid gap-6 lg:grid-cols-2 lg:items-start">
         <div className="min-w-0">
           <LinesCard />

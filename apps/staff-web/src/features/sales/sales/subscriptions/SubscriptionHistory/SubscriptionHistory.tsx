@@ -12,7 +12,7 @@ export interface SubscriptionHistoryProps {
   onClose: () => void;
 }
 
-/** The history of one confirmed subscription: the student's subscriptions oldest first, the opened one marked. */
+/** One confirmed subscription's history: the student's subscriptions oldest first, it marked. */
 /** The student's current package (newest active, else newest not cancelled): the editable one. */
 const currentOf = (oldestFirst: readonly SalesHistoryEntry[]): string | null =>
   currentPackage([...oldestFirst].reverse())?.id ?? null;

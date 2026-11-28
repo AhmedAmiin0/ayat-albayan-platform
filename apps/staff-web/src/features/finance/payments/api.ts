@@ -46,7 +46,7 @@ function listQuery(page: number, f: PaymentFilters, s: SortSearch): PaymentListQ
   return { ...filters, method: f.method, kind: f.kind, sort, dir, page, pageSize: PAGE_SIZE };
 }
 
-/** GET /payments: one page, filtered and (R-NFR-08) sorted server-side; default newest paid first. */
+/** GET /payments: one page, filtered and sorted server-side (R-NFR-08); newest paid first. */
 export const paymentsQuery = (page: number, filters: PaymentFilters = {}, sort: SortSearch = {}) =>
   queryOptions({
     queryKey: moneyKeys.payments({ page, filters, sort }),

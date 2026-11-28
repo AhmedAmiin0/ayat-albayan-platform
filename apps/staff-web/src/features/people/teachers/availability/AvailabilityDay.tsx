@@ -49,7 +49,7 @@ function problemText(
   return `${t.availability.overlap}${t.common.listSeparator}${span}`;
 }
 
-/** One weekday row: ranges as selects + add/remove, the 08–24 track, and its error line. R-TCH-02. */
+/** One weekday row: ranges as selects + add/remove, the 08–24 track, its error. R-TCH-02. */
 export function AvailabilityDay({ day, ranges, now, onChange }: Props) {
   const dayName = t.enums.weekday[day];
   const errorId = useId();

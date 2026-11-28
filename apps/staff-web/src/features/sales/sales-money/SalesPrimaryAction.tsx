@@ -7,7 +7,7 @@ interface Props {
   onClick: () => void;
 }
 
-/** The sales chat header's one visible action: a small secondary button, an icon button on phones (`compact`). */
+/** The chat header's one visible action: a small button, an icon on phones (`compact`). */
 export function SalesPrimaryAction({ label, icon, compact, onClick }: Props) {
   if (compact) {
     return (

@@ -32,7 +32,7 @@ export const studentRecordingsQuery = (input: {
     staleTime: 30 * 60_000,
   });
 
-/** GET /students/:id/recorded-lesson-ids: the lessons with a finished recording (no signed links). */
+/** GET /students/:id/recorded-lesson-ids: lessons with a finished recording (no links). */
 export const recordedLessonIdsQuery = (studentId: string) =>
   queryOptions({
     queryKey: recordingKeys.recordedLessonIds(studentId),

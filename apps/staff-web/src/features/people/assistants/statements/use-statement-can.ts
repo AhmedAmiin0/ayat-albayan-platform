@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { usePermissions } from '@ab/web-kit';
 import type { StatementCan } from './StatementActions';
 
-/** What this admin may do on a statement (a stable object, so the columns are not rebuilt each render). */
+/** What this admin may do on a statement (a stable object, so columns are not rebuilt). */
 export function useStatementCan(): StatementCan & { read: boolean } {
   const { can } = usePermissions();
   const [read, write, approve] = [

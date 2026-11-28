@@ -1,4 +1,4 @@
-// /sales/schedule URL state: the Riyadh day (`date`, today when absent) and one teacher (`teacherId`).
+// /sales/schedule URL state: the Riyadh day (`date`, today when absent) and one `teacherId`.
 
 export interface SalesScheduleSearch {
   date?: string;

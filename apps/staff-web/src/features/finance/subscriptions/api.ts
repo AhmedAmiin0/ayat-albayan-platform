@@ -28,7 +28,7 @@ interface SubscriptionsListQuery {
   filters?: FilterSearch;
 }
 
-/** GET /subscriptions: one page, filtered and (R-NFR-08) sorted server-side; default newest first. */
+/** GET /subscriptions: one page, filtered and sorted server-side (R-NFR-08); newest first. */
 export const subscriptionsQuery = (q: SubscriptionsListQuery) =>
   queryOptions({
     queryKey: moneyKeys.subscriptions(q),
@@ -73,7 +73,7 @@ export interface CreateSubscriptionBody {
   lessonsUsedBefore?: number;
   /** Absent means the quote's price. */
   customPrice?: number;
-  /** Rule 8: the same body re-sent (a retry) carries the same id, so the API replays the first package. */
+  /** Rule 8: a retry re-sends the same body with the same id, so the API replays the package. */
   clientRequestId?: string;
 }
 

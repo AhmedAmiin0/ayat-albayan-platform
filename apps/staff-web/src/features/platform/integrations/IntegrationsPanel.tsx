@@ -13,7 +13,7 @@ const s = t.integrations;
 export interface IntegrationsPanelProps {
   query: string;
   onSaved: (message: string) => void;
-  /** Only these groups are shown, drafted and saved by this panel (integration-places.ts); all when absent. */
+  /** The groups this panel shows, drafts and saves (integration-places.ts); all when absent. */
   groups?: readonly IntegrationGroup[] | undefined;
   title?: string | undefined;
   /** The first line under it (default the integrations intro). */

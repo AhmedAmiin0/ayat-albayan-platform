@@ -80,7 +80,7 @@ describe('teacher dialog sends meeting_mode (owner 2026-10-19)', () => {
     );
     fireEvent.change(screen.getByLabelText(T.meetingLink), { target: { value: '' } });
     fireEvent.click(screen.getByRole('radio', { name: T.meetingModeOption.static }));
-    // The note waits until the templates and integrations lists answered (no flash on a ready academy).
+    // The note waits for the templates and integrations lists (no flash on a ready academy).
     expect(await screen.findByText(T.meetingModeNoLink)).toBeTruthy();
     save();
     await waitFor(() =>

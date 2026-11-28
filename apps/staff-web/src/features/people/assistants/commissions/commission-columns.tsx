@@ -20,7 +20,7 @@ interface Handlers {
 const kindText = (c: AssistantCommissionView): string =>
   c.kind === 'renewal' ? L.kind.renewal.replace('{n}', String(c.share_percent)) : L.kind.first;
 
-/** Commission ledger: who earned what on which student's subscription (first or renewal); void with a reason. */
+/** Who earned what on which student's subscription (first or renewal); void with a reason. */
 export function commissionColumns({ canWrite, onVoid }: Handlers) {
   return col.columns([
     col.accessor((c) => c.student.name, {

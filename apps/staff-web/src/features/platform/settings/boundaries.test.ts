@@ -26,7 +26,7 @@ const sources = Object.fromEntries(
   Object.entries(raw).map(([key, source]) => [srcPath(key), source]),
 );
 
-/** Every module a source imports, re-exports, lazy-imports or mocks, resolved under src (externals dropped). */
+/** Every module a source imports, re-exports, lazy-imports or mocks, resolved under src. */
 function imports(file: string, source: string): string[] {
   const dir = file.split('/').slice(0, -1).join('/');
   const specs = [...source.matchAll(/(?:from|import|vi\.mock)\s*\(?\s*['"]([^'"]+)['"]/g)].map(

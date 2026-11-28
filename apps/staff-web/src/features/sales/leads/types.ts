@@ -21,7 +21,7 @@ function toPage(value: unknown): number {
   return Number.isInteger(n) && n > 1 ? n : 1;
 }
 
-/** Route `validateSearch`: unknown status/source/assignee/sort → all, blank search dropped, bad page → 1. */
+/** Route `validateSearch`: unknown filters or sort → all, blank search dropped, bad page → 1. */
 export function parseLeadSearch(s: Record<string, unknown>): LeadSearch {
   const out: LeadSearch = { page: toPage(s.page), ...parseLeadSort(s.sort, s.dir) };
   const assignee = s.assignee;

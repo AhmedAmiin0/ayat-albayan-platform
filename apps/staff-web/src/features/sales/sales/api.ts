@@ -13,8 +13,8 @@ export const salesSubscriptionsQuery = (kind: SalesSubscriptionKind) =>
 
 const mine = mySalesCalls({ apiFetch, apiSend });
 
-// The assistant's own pages (R-ASST-06). The API answers only for the caller: students they brought,
-// payments they recorded, their commission and statements. Amounts stay per currency.
+// The assistant's own pages (R-ASST-06). The API answers only for the caller: students they
+// brought, payments they recorded, their commission and statements. Amounts stay per currency.
 
 /** GET /sales/me/students — the students I brought, newest first; no price, only «paid or not». */
 export const myStudentsQuery = queryOptions({
@@ -32,7 +32,7 @@ export const myEarningsQuery = queryOptions({
 export const MY_MONEY_KEY = myMoneyKeys.all;
 export const MY_COMMISSIONS_PAGE_SIZE = 20;
 
-/** GET /sales/me/commissions — one page of my commissions, newest first (the previous page stays while the next loads). */
+/** GET /sales/me/commissions: one page, newest first (the previous page stays while loading). */
 export const myCommissionsQuery = (page: number) =>
   queryOptions({
     queryKey: myMoneyKeys.commissions(page),

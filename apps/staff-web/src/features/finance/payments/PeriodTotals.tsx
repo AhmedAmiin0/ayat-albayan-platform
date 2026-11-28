@@ -2,7 +2,7 @@ import { Amount } from '@/features/finance/subscriptions';
 import { t } from '@ab/web-kit';
 import type { PeriodTotal } from '@ab/money';
 
-/** The filter's totals per currency: net (payments − refunds), and the refunds when there are any. */
+/** The filter's totals per currency: net (payments − refunds), and the refunds if any. */
 export function PeriodTotals({ totals }: { totals: readonly PeriodTotal[] }) {
   if (totals.length === 0) return null;
   return (

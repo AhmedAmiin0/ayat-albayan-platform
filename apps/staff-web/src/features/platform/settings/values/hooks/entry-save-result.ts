@@ -11,7 +11,7 @@ export type RowStatus =
   | { state: 'moved' }
   | { state: 'conflict'; conflict: ConfigEntryConflict; mine: unknown };
 
-/** saved; moved (owned); failed; conflict (the row waits for a choice); confirm (ask for the typed text). */
+/** saved; moved (owned); failed; conflict (the row waits for a choice); confirm (typed text). */
 export type SaveEnd = 'saved' | 'moved' | 'failed' | 'conflict' | 'confirm';
 
 export const IDLE: RowStatus = { state: 'idle' };

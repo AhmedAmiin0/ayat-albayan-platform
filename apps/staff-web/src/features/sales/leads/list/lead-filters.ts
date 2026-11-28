@@ -24,7 +24,7 @@ function assigneeText(
   return people.find((p) => p.id === assignee)?.name ?? t.common.loading;
 }
 
-/** The set source, assignee and order of the inbox as removable chips (the status is the fihris beside the list). */
+/** The inbox's source, assignee and order as removable chips (status is the fihris). */
 export function leadFilterChips({ search, people, onFilter }: LeadChipsOptions): FilterChip[] {
   const sort = leadSortValue(search);
   return [

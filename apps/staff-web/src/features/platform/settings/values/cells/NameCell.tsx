@@ -3,7 +3,7 @@ import { NuqtaGlyph, t } from '@ab/web-kit';
 
 const tags = t.settingsValues.tags;
 
-/** A registry tag: plain and neutral (no status colour: a tag describes the value, it is not a state). */
+/** A registry tag: plain and neutral, no status colour (a tag describes the value, not a state). */
 export const tagClass =
   'inline-flex h-5 items-center whitespace-nowrap rounded-xs border border-rule-strong px-1.5 text-2xs font-semibold text-ink-2';
 

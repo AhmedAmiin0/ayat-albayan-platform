@@ -57,7 +57,7 @@ describe('«ربط بطالب موجود» in the sales chat’s «المزيد�
 
   it.each([
     ['without leads.link_family', thread(), 'leads.link_family'],
-    // The picker searches with GET /sales/registration-check: without it the search could only fail.
+    // The picker searches with GET /sales/registration-check: without it the search only fails.
     ['without students.check_registration', thread(), 'students.check_registration'],
     ['on a family chat', thread({ guardian_id: 'g-1', guardian_name: 'أم سهيلة' }), null],
     ['on a teacher’s chat', thread({ teacher_id: 't-1', teacher_name: 'أ. أبرار' }), null],

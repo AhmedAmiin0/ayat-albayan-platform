@@ -20,7 +20,7 @@ const CONFIRMED = [
   },
 ];
 
-/** The route's `kind` and `history` as local state, like /sales/subscriptions?kind=confirmed&history=. */
+/** The route's `kind` and `history` as local state, like /sales/subscriptions?kind=&history=. */
 function Harness({ kind = 'confirmed' as const }: { kind?: 'confirmed' | 'pending' }) {
   const [open, setOpen] = useState<string | null>(null);
   return (

@@ -16,7 +16,7 @@ const STATUS_OPTIONS: FilterOption[] = [
   ...USER_STATUSES.map((s) => ({ value: s, label: t.users.status[s] })),
 ];
 
-/** Role and status as the table toolbar's extra filters (fields in the panel, chips under the bar). */
+/** Role and status as the toolbar's extra filters (fields in the panel, chips under the bar). */
 export function usersFilters(
   view: UsersPageView,
   onChange: (next: UsersPageView) => void,

@@ -16,7 +16,7 @@ import { uploadSigned } from '@/lib/storage/upload-slot';
 export type { TeacherEarningsBalanceView, TeacherEarningView, TeacherPaymentView } from '@ab/money';
 
 export const EARNINGS_PAGE_SIZE = 20;
-/** Admin reads one teacher by id; a teacher always reads their own (the id comes from the token). */
+/** Admin reads one teacher by id; a teacher always reads their own (id from the token). */
 export type Scope = { kind: 'admin'; teacherId: string } | { kind: 'mine' };
 
 const client = { apiFetch, apiSend };
@@ -58,7 +58,7 @@ export interface PaymentsList {
   filters?: FilterSearch;
 }
 
-/** One page of payments, sorted and filtered (method, voided, note) server-side; no sort = newest first. */
+/** One page of payments, sorted and filtered server-side; no sort = newest first. */
 export const paymentsQuery = (s: Scope, q: PaymentsList) =>
   queryOptions({
     queryKey: moneyKeys.earningsPayments(owner(s), q),
@@ -79,7 +79,7 @@ export const voidTeacherPayment = calls.voidPayment;
 export const receiptUrl = (s: Scope, paymentId: string) =>
   s.kind === 'admin' ? calls.receipt(paymentId) : mine.receipt(paymentId);
 
-/** Straight to the private bucket through a one-off signed URL; the path is then sent with the payment. */
+/** To the private bucket through a one-off signed URL; the path then goes with the payment. */
 export async function uploadTeacherReceipt(input: {
   teacherId: string;
   file: File;

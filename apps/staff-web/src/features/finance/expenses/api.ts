@@ -63,7 +63,7 @@ export const deleteExpense = calls.remove;
 
 export const expenseReceiptUrl = calls.receipt;
 
-/** Straight to receipts/expenses/… through a one-off signed URL; the path is then saved with the expense. */
+/** To receipts/expenses/… through a one-off signed URL; the path is then saved with the expense. */
 export async function uploadExpenseReceipt(file: File): Promise<string> {
   const slot = expenseReceiptUploadSchema.parse({ mime: file.type, size: file.size });
   const signed = await calls.receiptUploadUrl(slot);

@@ -11,7 +11,7 @@ export interface PayoutDialog {
   kind: 'pay' | 'reopen' | 'unpay';
 }
 
-/** The dialog behind a payout row action: pay (confirm + receipt), reopen, un-pay (with a reason). */
+/** The dialog behind a payout action: pay (confirm + receipt), reopen, un-pay (with a reason). */
 export function PayoutDialogs({ open, onClose }: { open: PayoutDialog; onClose: () => void }) {
   const queryClient = useQueryClient();
   const { payout, kind } = open;

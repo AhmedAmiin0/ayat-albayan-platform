@@ -63,7 +63,7 @@ function AvailabilityPanel({ teacher }: { teacher: Teacher }) {
   );
 }
 
-/** Teacher profile (R-TCH-01, R-TCH-02): photo, cartouche name + status, meta line, the admin's photo control, tabs. */
+/** Teacher profile (R-TCH-01, R-TCH-02): photo, name, status, meta line, photo control, tabs. */
 export function TeacherDetailPage({ teacherId }: { teacherId: string }) {
   const teacher = useQuery(teacherQuery(teacherId));
   const [tab, setTab] = useState<Tab>('availability');

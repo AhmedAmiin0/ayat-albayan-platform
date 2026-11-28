@@ -14,7 +14,7 @@ export interface PortalListProps<T extends RowData> {
   empty: { title: string; hint: string };
 }
 
-/** The shell of the assistant's read-only lists: loading, a failed load with a retry, the empty state, the table. */
+/** The assistant's read-only list shell: loading, a failed load with retry, empty, the table. */
 export function PortalList<T extends RowData>({
   title,
   query,

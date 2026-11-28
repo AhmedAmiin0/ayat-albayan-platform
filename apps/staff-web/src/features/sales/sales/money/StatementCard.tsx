@@ -21,7 +21,7 @@ function lineText(l: AssistantStatementLineView): string {
   return p.line.adjustment.replace('{reason}', l.reason ?? '');
 }
 
-/** One month's statement: status, the totals per currency, and its lines (salary, commissions, adjustments). */
+/** One month's statement: status, totals per currency, and its lines. */
 export function StatementCard({ statement: s }: { statement: AssistantStatementView }) {
   const when = s.paid_at
     ? p.paidAt.replace('{date}', formatDate(s.paid_at))

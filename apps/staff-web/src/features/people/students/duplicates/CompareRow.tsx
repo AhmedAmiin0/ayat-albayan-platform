@@ -30,7 +30,7 @@ export interface CompareRowProps {
   last?: boolean;
 }
 
-/** One field of the compare: label | typed | existing | result. On phones the label heads the row. */
+/** One compare field: label | typed | existing | result. On phones the label heads the row. */
 export function CompareRow({ label, now, existing, match, large, last }: CompareRowProps) {
   const line = last ? '' : 'border-b border-rule';
   const value = cn(base, line, 'font-semibold text-ink', large && 'text-base');

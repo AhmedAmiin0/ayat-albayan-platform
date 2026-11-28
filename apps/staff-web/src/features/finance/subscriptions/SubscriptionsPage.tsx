@@ -29,12 +29,12 @@ import { useSubscriptionFilters } from './use-subscription-filters';
 
 interface Props {
   search: SubscriptionsUrlSearch;
-  /** A patch of the URL search (the route re-validates it); filter and sort changes pass `page: undefined`. */
+  /** A URL search patch (the route re-validates it); filter and sort changes reset `page`. */
   onSearch: (patch: Record<string, unknown>) => void;
   onOpenStudent: (studentId: string) => void;
 }
 
-/** /admin/subscriptions (R-SUB-01/02): packages by status, sort + filters (URL), new, pay, tasks. */
+/** /admin/subscriptions (R-SUB-01/02): packages by status, sort, filters, new, pay, tasks. */
 export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {
   const { can } = usePermissions();
   const canPause = can('courses.pause');

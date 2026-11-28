@@ -72,7 +72,7 @@ describe('«التواصل» ?tab=', () => {
 
   it('that group holds both timing values and the reopen template, editable there; the public number sits in «الأكاديمية»', () => {
     const timing = ['quick_reply_window_hours', 'reminder_lookahead_hours'] as const;
-    // The chat reopen template, the WhatsApp calls switch and permission template (docs/28) and the old CRM files host and copy switch and the presence switch (docs/33) sit in the same messaging group.
+    // Chat reopen, WhatsApp calls (docs/28), CRM and presence (docs/33) share the messaging group.
     expect([...VALUE_GROUPS[VALUES_GROUP.timing]].sort()).toEqual([
       'calls_permission_template',
       'chat_reopen_template',

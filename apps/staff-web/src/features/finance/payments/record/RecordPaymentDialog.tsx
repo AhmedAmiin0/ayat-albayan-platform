@@ -110,8 +110,8 @@ export function RecordPaymentDialog({ subscription, invoiceId, kind = 'payment',
 }
 
 /**
- * A storage failure (not an ApiError) is the upload; no answer at all (fetch's TypeError) may
- * still have been recorded, so it says so (a retry is safe); anything else maps through payments.error.
+ * A storage failure (not an ApiError) is the upload; no answer at all (fetch's TypeError) may still
+ * have been recorded, so it says so (a retry is safe); anything else maps through payments.error.
  */
 function uploadOrApiError(e: unknown): string {
   if (e instanceof TypeError) return t.payments.mobile.offline;

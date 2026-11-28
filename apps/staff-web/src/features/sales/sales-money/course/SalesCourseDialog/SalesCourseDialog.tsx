@@ -30,7 +30,7 @@ function CourseBlocked({ view }: { view: SalesCourseView }) {
 }
 
 
-/** The previous days prefilled when she continues (or adjusts them); else null (the empty picker). */
+/** The previous days prefilled when she continues or adjusts them; else null (empty picker). */
 const wizardStart = (plan: ContinuePlan | null, continuing: boolean): ContinuePlan | null =>
   continuing ? plan : null;
 

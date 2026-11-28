@@ -14,7 +14,7 @@ const TABS: { value: Tab; label: string }[] = [
   { value: 'statements', label: t.assistants.tabs.statements },
 ];
 
-/** /admin/assistants (R-ASST-05): the assistants and their terms, the commission ledger, the monthly statements. */
+/** /admin/assistants (R-ASST-05): assistants and their terms, the ledger, monthly statements. */
 export function AssistantsPage() {
   const [tab, setTab] = useState<Tab>('list');
   const can = useStatementCan();

@@ -64,7 +64,7 @@ export function groupKeys(id: ValuesGroupId): readonly SettingKey[] {
   return VALUE_GROUPS[id];
 }
 
-/** Where a module-owned group is edited (the page, and its tab when it has one), and the link's words. */
+/** Where a module-owned group is edited (the page, and its tab if any), and the link's words. */
 export const OWNER_PAGE: Record<
   OwnedValueGroupId,
   { to: string; search?: Record<string, string>; label: string }

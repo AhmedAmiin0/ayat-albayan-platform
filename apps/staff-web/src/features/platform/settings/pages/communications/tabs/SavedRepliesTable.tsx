@@ -17,7 +17,7 @@ export interface SavedRepliesTableProps {
   onDelete: (reply: SavedReply) => void;
 }
 
-/** One row per shared reply: order (up / down, no drag), title, the text on one line, file, actions. */
+/** One row per shared reply: order (up / down, no drag), title, text on one line, file, actions. */
 export function SavedRepliesTable({
   labelledBy,
   replies,

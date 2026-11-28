@@ -74,7 +74,7 @@ describe('SubscriptionsPage (R-SUB-01/02)', () => {
     expect(cells.getByText(t.enums.packageSize['4'])).toBeTruthy();
     expect(cells.getByText('بقيت حلقتان')).toBeTruthy();
     expect(cells.getByText(t.enums.subscriptionStatus.unpaid)).toBeTruthy();
-    // The task never repeats the balance it was raised with (it can be stale); the row above has it live.
+    // The task never repeats the balance it was raised with (it can be stale); the row has it live.
     expect(await screen.findByText('باقة سهيلة قاربت على الانتهاء')).toBeTruthy();
   });
 
