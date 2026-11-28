@@ -23,10 +23,11 @@ test.describe('assistant statements: reopen (20261006000273)', () => {
       await approve(tx, s1);
       // voided: a reversal (-20) is due this month
       await pay(tx, sub, { amount: 100, kind: 'refund' });
-      const { statement_id: s2 } = await generate(tx, a, await openMonth(tx, a)); // ... and goes into this month's statement
+      // ... and goes into this month's statement
+      const { statement_id: s2 } = await generate(tx, a, await openMonth(tx, a));
       expect(one(await tx<{ n: number }[]>`select count(*)::int n from public.assistant_statement_lines
         where statement_id = ${s2} and kind = 'adjustment'`).n).toBe(1);
-      await pay(tx, sub, 100); // earned again as a new earning: it no longer points at the first statement
+      await pay(tx, sub, 100); // a new earning, no longer tied to the first statement
       expect(one(await tx<{ statement_id: string | null }[]>`select statement_id from public.assistant_commissions
         where assistant_id = ${a}`).statement_id).toBeNull();
       expect(await code(tx, () => tx`select public.reopen_assistant_statement(${s1}, null)`)).toBe('reversal_in_later_statement');
@@ -46,7 +47,8 @@ test.describe('assistant statements: reopen (20261006000273)', () => {
       await pay(tx, await subscription(tx, s, { price: 300 }), 300);
       await tx`select public.reopen_assistant_statement(${s1}, null)`; // takes its own line and the waiting reversal away
       expect((await tx`select 1 from public.assistant_adjustments where assistant_id = ${a}`).length).toBe(0);
-      expect((await generate(tx, a, last)).totals).toEqual({}); // last month holds nothing now: it was earned this month
+      // Last month holds nothing now: it was earned this month.
+      expect((await generate(tx, a, last)).totals).toEqual({});
       expect((await generate(tx, a, await openMonth(tx, a))).totals).toEqual({
         SAR: { salary: 0, commissions: 15, adjustments: 0, total: 15 },
       });

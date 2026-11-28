@@ -3,13 +3,13 @@ import { as, rolledBack, userId, type Tx } from '../../support/core/rls';
 import { USERS } from '../../support/core/users';
 import { dbError } from '../../support/core/db-error';
 
-// Migration 630 (docs/26 §2a, 26-P1 «Expand») against the real database, every test rolled back. Only
-// throwaway zz_e2e_* keys are written: never a messaging or gate key.
+// Migration 630 (docs/26 §2a, 26-P1 «Expand») against the real database, each test rolled back.
+// Only throwaway zz_e2e_* keys are written: never a messaging or gate key.
 
 interface Row { key: string; value: unknown; version: string; updated_at: Date }
 interface Err { code?: string; detail?: string }
 const fail = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then((): Err => ({}), dbError);
-// ::text::jsonb: a bare ::jsonb makes postgres.js serialise the string again (a JSON string, not an array).
+// ::text::jsonb: a bare ::jsonb makes postgres.js serialise the string again (a JSON string).
 const json = (v: unknown) => JSON.stringify(v);
 
 const ENTRIES = [
@@ -20,7 +20,7 @@ const ENTRIES = [
 
 const rows = (tx: Tx) => tx<Row[]>`
   select key, value, version::text as version, updated_at from public.settings where key like 'zz\_e2e\_%' order by key`;
-// The bump is deferred to commit (no deadlock with autocommit writers); IMMEDIATE fires the pending ones.
+// The bump waits for commit (no deadlock with autocommit writers); IMMEDIATE fires pending ones.
 const rev = async (tx: Tx) => {
   await tx`set constraints public.settings_revision_bump immediate`;
   return (await tx<{ rev: string }[]>`select rev::text as rev from public.settings_revision`)[0]?.rev;

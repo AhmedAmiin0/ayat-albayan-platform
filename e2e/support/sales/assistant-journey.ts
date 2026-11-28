@@ -58,7 +58,7 @@ const statusLine = (status: StudentStatus) => `${R.status}: ${ar.enums.studentSt
 
 export interface Expected {
   to: StudentStatus;
-  /** null: no status_change row yet (a registration with a trial starts at `trial`, docs/18 transition 1). */
+  /** null: no status_change row yet (a registration with a trial starts at `trial`, docs/18 t1). */
   from: StudentStatus | null;
   reason: string | null;
   via?: string;
@@ -100,7 +100,7 @@ export async function shot(page: Page, info: TestInfo, file: string): Promise<vo
   await page.screenshot({ path: info.outputPath(`${file}.png`), fullPage: true });
 }
 
-/** One call of the admin's (or the teacher's) page against the API: the status code and body text. */
+/** One call of the admin's (or teacher's) page against the API: the status code and body text. */
 export async function apiAs(page: Page, req: { method: 'PATCH' | 'POST'; path: string; data: object }): Promise<{ status: number; body: string }> {
   const res = await page.request.fetch(`${API}${req.path}`, { method: req.method, headers: await bearer(page), data: req.data });
   return { status: res.status(), body: await res.text() };

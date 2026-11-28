@@ -59,7 +59,7 @@ test.describe('assistant terms, merge and adjustment retries (20261006000272-273
       const merged = await brought(tx, { by: a, phone: '+966500000322', price: 300 });
       await pay(tx, kept.sub, 100);
       await pay(tx, merged.sub, 300);
-      await paidStatement(tx, a, await openMonth(tx, a)); // both commissions are in a paid statement
+      await paidStatement(tx, a, await openMonth(tx, a)); // both commissions in a paid statement
       await tx`select public.merge_students(${kept.student}, ${merged.student}, null)`;
       expect(await commissionOf(tx, kept.student)).toMatchObject({ assistant_id: a, status: 'earned', amount: '10.00' });
       expect((await tx`select 1 from public.assistant_commissions where assistant_id = ${a}`).length).toBe(1);

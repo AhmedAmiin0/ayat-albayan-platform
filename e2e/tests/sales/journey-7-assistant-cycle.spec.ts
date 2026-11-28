@@ -48,7 +48,7 @@ test.describe('journey 7 — the assistant’s full student cycle (docs/16, docs
     const assistantId = await seedUser({ email, password: PASSWORD, role: 'sales', fullName: 'مساعدة الرحلة' });
     const admin = await asRole('admin');
 
-    // 1. A family writes in. Auto-assign picks the least loaded salesperson: the admin gives the lead to ours.
+    // 1. A family writes in. Auto-assign picks the least busy seller; the admin gives us the lead.
     expect((await stubInbound({ from: digits, name: guardian, text: 'السلام عليكم' })).status).toBe(200);
     const lead = await leadIdOf(phone);
     expect((await apiAs(admin, { method: 'POST', path: `/leads/${lead}/assign`, data: { profileId: assistantId } })).status).toBe(200);
@@ -81,7 +81,7 @@ test.describe('journey 7 — the assistant’s full student cycle (docs/16, docs
     const who = () => ({ ...family, studentId: ids.studentId });
 
     await test.step('4. the trial is attended (admin, API): «بانتظار الاشتراك», automatic', async () => {
-      // Outcomes are refused before the start (409 not_started): the booked lesson is moved into the past.
+      // Outcomes are refused before the start (409 not_started): the lesson is moved into the past.
       await startNow(ids.lessonId);
       expect(await completeLesson(admin, ids.lessonId)).toBe(200);
       await expectStatus(page, who(), { from: 'trial', to: 'pending_subscription', reason: 'trial_attended' });
@@ -113,7 +113,7 @@ test.describe('journey 7 — the assistant’s full student cycle (docs/16, docs
     });
 
     await test.step('6. the package ends (renewal date passed): «بانتظار التجديد»', async () => {
-      // PATCH /subscriptions/:id is the admin's real write; the recompute after it ends the package.
+      // PATCH /subscriptions/:id is the admin's real write; the recompute then ends the package.
       const pkg = await newestPackage(ids.studentId);
       const res = await apiAs(admin, { method: 'PATCH', path: `/subscriptions/${pkg.id}`, data: { renewsOn: riyadhDay(-1) } });
       expect(res.status, res.body).toBe(200);

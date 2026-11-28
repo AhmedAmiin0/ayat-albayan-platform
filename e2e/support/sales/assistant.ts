@@ -26,7 +26,8 @@ export async function assistant(
   if (terms) {
     const t = {
       commission_type: null, commission_value: null, commission_currency: null,
-      commission_starts_on: null, salary_amount: null, salary_currency: null, salary_starts_on: null,
+      commission_starts_on: null,
+      salary_amount: null, salary_currency: null, salary_starts_on: null,
       ...terms,
     };
     await tx`insert into public.assistant_terms (assistant_id, commission_type, commission_value, commission_currency,
@@ -39,7 +40,7 @@ export async function assistant(
 
 interface SubInput { price: number; currency?: string; startsOn?: string; usedBefore?: number }
 
-/** A guardian with one child; broughtBy = the sales profile (null: nobody brought them), broughtAt = when (default now). */
+/** A guardian with one child; broughtBy: a sales profile or null; broughtAt: default now. */
 export async function student(
   tx: Tx,
   input: { phone: string; broughtBy?: string | null; broughtAt?: string },
@@ -53,7 +54,7 @@ export async function student(
   return s.id;
 }
 
-/** An 8-lesson package; starts_on defaults to today in Riyadh (a day before it is a course that already started). */
+/** An 8-lesson package; starts_on defaults to today in Riyadh (earlier: a running course). */
 export async function subscription(tx: Tx, studentId: string, input: SubInput): Promise<string> {
   const [s] = await tx<{ id: string }[]>`insert into public.subscriptions
     (student_id, package, duration, lessons_total, price, currency, price_source, starts_on, lessons_used_before, created_at)
@@ -67,7 +68,7 @@ export async function subscription(tx: Tx, studentId: string, input: SubInput): 
 
 interface PayOpts { amount: number; kind?: 'payment' | 'refund'; at?: string; by?: string }
 
-/** A payment (or refund) of the package, in the package currency: a bare number is a payment of now. */
+/** A payment (or refund) of the package in its currency: a bare number is a payment made now. */
 export async function pay(tx: Tx, sub: string, p: number | PayOpts) {
   const o: PayOpts = typeof p === 'number' ? { amount: p } : p;
   const [row] = await tx<{ id: string }[]>`insert into public.payments
@@ -106,7 +107,7 @@ export const renewalOf = async (
   (await tx<(CommissionRow & { share_percent: number })[]>`select assistant_id, amount::text, currency, status, subscription_id,
     statement_id, share_percent from public.assistant_commissions where subscription_id = ${subscriptionId} and kind = 'renewal'`)[0];
 
-/** A one-student family: brought by `by` (at `broughtAt`, default now), one package of `price`, nothing paid yet. */
+/** A one-student family brought by `by` (at `broughtAt`, default now), one unpaid package. */
 export async function brought(
   tx: Tx,
   input: SubInput & { by: string; phone: string; broughtAt?: string },
@@ -119,7 +120,7 @@ export async function brought(
   return { student: st, sub: await subscription(tx, st, input) };
 }
 
-/** The first day (YYYY-MM-DD) of the month the next statement of `a` falls in: this month in Riyadh. */
+/** First day (YYYY-MM-DD) of the month of `a`'s next statement: this month in Riyadh. */
 export const openMonth = async (tx: Tx, a: string): Promise<string> =>
   one(await tx<{ m: string }[]>`select public.assistant_next_open_month(${a})::text as m`).m;
 

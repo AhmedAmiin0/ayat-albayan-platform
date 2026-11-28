@@ -37,7 +37,7 @@ test.describe('course pause RPCs (docs/11 §7b)', () => {
       };
       expect(started).toBe(false);
       expect(await statuses(tx, s)).toMatchObject({ student: 'active', sub: 'active', rule: 'active' });
-      // The solo rule is still active: an occurrence inside the window (the only student paused) makes no row.
+      // The solo rule stays active: an occurrence in the window (only student paused) adds no row.
       expect(await generate(tx, { rule: s.solo, today: s.today, days: [4, 12], hourZ: 16 }))
         .toHaveLength(1);
       expect((await begin(tx, id)).started).toBe(true);
@@ -120,13 +120,14 @@ test.describe('course pause RPCs (docs/11 §7b)', () => {
       const s = await seedPause(tx);
       const { id } = (await start(tx, pauseOf(s, 3, 5))) as { id: string };
       await begin(tx, id);
-      // As if the pause ran from 10 days ago to 3 days ago and the job wakes today: resume day = until + 1.
+      // As if the pause ran from 10 to 3 days ago and the job wakes today: resume day = until + 1.
       await tx`update public.course_pauses set from_date = ${day(s.today, -10)}, until_date = ${day(s.today, -3)} where id = ${id}`;
       await tx`update public.subscriptions set starts_on = ${day(s.today, -20)} where id = ${s.sub}`;
       const first = await resume(tx, { pause_id: id, actor: null });
       const second = await resume(tx, { pause_id: id, actor: null });
       expect([first.resumed, first.days, second.resumed, second.days]).toEqual([true, 8, false, 8]);
-      // The package (started before the pause) moves by the 8 days; the rule starts after the resume day: its end stays.
+      // The package (started before the pause) moves 8 days; the rule starts after the resume day,
+      // so its end stays.
       expect(await statuses(tx, s)).toMatchObject({ renews: day(s.today, 38), ends: day(s.today, 30), rule: 'active' });
       const [row] = await tx<{ n: number }[]>`select count(*)::int as n from public.course_pauses where student_id = ${s.student} and resumed_at is null`;
       expect(row?.n).toBe(0);
