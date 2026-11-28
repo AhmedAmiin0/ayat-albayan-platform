@@ -113,7 +113,7 @@ export async function unpaidPackage(studentId: string): Promise<UnpaidPackage> {
     insert into public.subscriptions
       (student_id, package, duration, lessons_total, price, currency, price_source, starts_on, status)
     values (${studentId}, '4', ${offer.duration}, ${offer.lessons}, ${offer.afterDiscount}, ${offer.currency},
-      ${sql.json(JSON.parse(JSON.stringify(offer)))}, ${today}, 'unpaid')
+      ${sql.json({ ...offer })}, ${today}, 'unpaid')
     returning id`,
   );
   if (!sub) throw new Error('subscription not written');

@@ -48,7 +48,7 @@ test.describe('admin shell: keyboard focus', () => {
   test('removing a filter chip keeps focus: the next chip, then «تصفية» once none is left', async ({ asRole }) => {
     const page = await asRole('admin');
     await page.goto('/admin/leads?source=referral&assignee=none');
-    const chips = page.getByRole('list', { name: ar.table.activeFilters }).getByRole('button', { name: new RegExp(`^${ar.table.removeFilter.split('{')[0]}`) });
+    const chips = page.getByRole('list', { name: ar.table.activeFilters }).getByRole('button', { name: new RegExp(`^${ar.table.removeFilter.split('{')[0] ?? ''}`) });
     await expect(chips).toHaveCount(2);
     await chips.first().focus();
     await page.keyboard.press('Enter');

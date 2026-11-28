@@ -57,12 +57,12 @@ async function login(run: Run): Promise<BrowserContextOptions['storageState']> {
 
 /** `student:first` → the URL of the first row in /admin/students (same for teachers). */
 async function resolveRoute(run: Run, opts: { route: string; page: Page }): Promise<string> {
-  const match = /^(student|teacher):first$/.exec(opts.route);
-  if (!match) return opts.route;
-  await opts.page.goto(`${run.base}/admin/${match[1]}s`);
+  const kind = /^(student|teacher):first$/.exec(opts.route)?.[1];
+  if (kind === undefined) return opts.route;
+  await opts.page.goto(`${run.base}/admin/${kind}s`);
   await settle(opts.page); // The first body row is the loading row until the list arrives.
   await opts.page.getByRole('row').nth(1).click();
-  await opts.page.waitForURL(new RegExp(`/admin/${match[1]}s/[^/]+$`));
+  await opts.page.waitForURL(new RegExp(`/admin/${kind}s/[^/]+$`));
   return new URL(opts.page.url()).pathname;
 }
 

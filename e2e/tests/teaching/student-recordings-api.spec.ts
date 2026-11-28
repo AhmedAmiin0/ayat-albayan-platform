@@ -16,7 +16,7 @@ const env = (name: string) => process.env[name] ?? '';
 async function tokenOf(email: string, password: string): Promise<string> {
   const client = createClient(env('SUPABASE_URL'), env('SUPABASE_SERVICE_ROLE_KEY'), { auth: { persistSession: false } });
   const { data, error } = await client.auth.signInWithPassword({ email, password });
-  if (error || !data.session) throw error ?? new Error('no session');
+  if (error) throw error;
   return data.session.access_token;
 }
 

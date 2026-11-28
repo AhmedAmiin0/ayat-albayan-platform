@@ -50,7 +50,7 @@ test.describe('Google sync alongside the old script (docs/24)', () => {
     });
     await expect
       .poll(
-        async () => (await itemsOf(lessonId)).map((i) => `${i.kind}:${i.state}:${i.skip_reason}`),
+        async () => (await itemsOf(lessonId)).map((i) => `${i.kind}:${i.state}:${String(i.skip_reason)}`),
         WAIT,
       )
       .toEqual(['teacher_event:skipped:dry_run', 'main_event:skipped:dry_run']);
@@ -73,7 +73,7 @@ test.describe('Google sync alongside the old script (docs/24)', () => {
     const [mainEv] = state.calendars.primary ?? [];
     expect(teacherEv?.summary).toBe('حلقة — طالب Google · المنصة (يحتاج تأكيد)');
     expect(teacherEv?.extendedProperties?.private).toEqual({ ab_source: 'platform', ab_lesson_id: lessonId });
-    expect(`${teacherEv?.description}${teacherEv?.location}`).not.toContain('jit.si');
+    expect(`${String(teacherEv?.description)}${String(teacherEv?.location)}`).not.toContain('jit.si');
     expect(teacherEv?.description).not.toContain('+966');
     expect(mainEv?.description).toContain('رقم الطالب: +966');
 

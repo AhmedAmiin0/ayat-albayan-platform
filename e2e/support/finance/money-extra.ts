@@ -94,7 +94,7 @@ export function thisMonthStart(now = new Date()): string {
  */
 export function uniqueName(base: string): string {
   const letters = 'ابتثجحخدذر';
-  const tail = [...String(Date.now()).slice(-5)].map((d) => letters.charAt(Number(d))).join('');
+  const tail = String(Date.now()).slice(-5).split('').map((d) => letters.charAt(Number(d))).join('');
   return `${base} ${tail}`;
 }
 

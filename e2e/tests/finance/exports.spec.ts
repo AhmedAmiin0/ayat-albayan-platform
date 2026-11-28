@@ -103,7 +103,7 @@ test.describe('CSV exports (R-RPT-03)', () => {
     expect(todays).toEqual([facts.lesson.date, facts.lesson.time, ar.enums.duration[90], 'أبرار', facts.code, student, ar.enums.lessonStatus.scheduled, '', ar.common.yes]);
     const done = mine.find((r) => r[6] === ar.enums.lessonStatus.completed);
     expect(done?.[7]).toBe(ar.enums.attendance.on_time);
-    expect(`${done?.[0]} ${done?.[1]}`).toMatch(STAMP);
+    expect(`${String(done?.[0])} ${String(done?.[1])}`).toMatch(STAMP);
 
     const payments = await download(page, 'payments');
     expect(payments.name).toBe(`payments-${range.from}_${range.to}.csv`);

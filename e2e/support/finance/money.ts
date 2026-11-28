@@ -74,7 +74,7 @@ export async function seedPackageStudent(input: {
       insert into public.subscriptions
         (student_id, package, duration, lessons_total, price, currency, price_source, starts_on, status)
       values (${studentId}, '4', ${offer.duration}, ${offer.lessons}, ${offer.afterDiscount}, ${offer.currency},
-        ${sql.json(JSON.parse(JSON.stringify(offer)))}, ${riyadhDate(now, -7)}, ${input.paid ? 'active' : 'unpaid'})
+        ${sql.json({ ...offer })}, ${riyadhDate(now, -7)}, ${input.paid ? 'active' : 'unpaid'})
       returning id`;
     if (!sub) throw new Error('subscription not written');
     const lesson = async (startsAt: Date, status: string) => {

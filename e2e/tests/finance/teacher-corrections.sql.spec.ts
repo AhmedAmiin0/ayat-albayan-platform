@@ -128,7 +128,7 @@ test.describe('teacher payment corrections (20261005000201)', () => {
           earned: Number(s?.earned ?? 0),
           paid: Number(s?.paid ?? 0),
           owed: Number(s?.owed ?? 0),
-          unpaid: Number(s?.unpaid_sessions ?? 0),
+          unpaid: s?.unpaid_sessions ?? 0,
         };
       };
       const before = await summary();

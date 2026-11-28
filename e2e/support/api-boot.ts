@@ -50,13 +50,18 @@ export async function bootApiOnce(runMs: number): Promise<void> {
     env: { ...process.env, ...BOOT_ENV },
     stdio: 'ignore',
   });
-  let alive = true;
-  const exited = new Promise<void>((resolve) => child.once('exit', () => ((alive = false), resolve())));
+  const state = { alive: true };
+  const exited = new Promise<void>((resolve) =>
+    child.once('exit', () => {
+      state.alive = false;
+      resolve();
+    }),
+  );
   try {
-    await healthy({ deadline: Date.now() + 60_000, alive: () => alive });
+    await healthy({ deadline: Date.now() + 60_000, alive: () => state.alive });
     await new Promise((r) => setTimeout(r, runMs));
     // Still running after its sender passes: a crash right after /health fails the boot.
-    if (!alive) throw new Error('the second API exited while running');
+    if (!state.alive) throw new Error('the second API exited while running');
   } finally {
     child.kill('SIGTERM');
     const killer = setTimeout(() => child.kill('SIGKILL'), 10_000);
